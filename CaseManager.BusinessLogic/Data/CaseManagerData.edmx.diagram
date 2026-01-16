@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="a4472eab606146dfa996c204e68438d1" Name="Diagram1">
+        <EntityTypeShape EntityType="CaseManagerModel.Permission" Width="1.5" PointX="0.75" PointY="6" />
+        <EntityTypeShape EntityType="CaseManagerModel.PermissionSet" Width="1.5" PointX="3" PointY="6.125" />
+        <EntityTypeShape EntityType="CaseManagerModel.Role" Width="1.5" PointX="5.25" PointY="5.75" />
+        <EntityTypeShape EntityType="CaseManagerModel.UserGroup" Width="1.5" PointX="7.5" PointY="7.375" />
+        <EntityTypeShape EntityType="CaseManagerModel.Department" Width="1.5" PointX="5.75" PointY="1.25" />
+        <EntityTypeShape EntityType="CaseManagerModel.Designation" Width="1.5" PointX="10.375" PointY="4.875" />
+        <EntityTypeShape EntityType="CaseManagerModel.Employee" Width="1.5" PointX="8" PointY="1" />
+        <EntityTypeShape EntityType="CaseManagerModel.UserGroupUser" Width="1.5" PointX="0.75" PointY="8.75" />
+        <EntityTypeShape EntityType="CaseManagerModel.UserRole" Width="1.5" PointX="7.5" PointY="5" />
+        <AssociationConnector Association="CaseManagerModel.FK_UserRoles_Roles" />
+        <AssociationConnector Association="CaseManagerModel.FK_Employee_Departments" />
+        <AssociationConnector Association="CaseManagerModel.FK_Employee_Designations" />
+        <AssociationConnector Association="CaseManagerModel.PermissionSetPermissions" />
+        <AssociationConnector Association="CaseManagerModel.PermissionSetRoles" />
+        <AssociationConnector Association="CaseManagerModel.RolePermissions" />
+        <AssociationConnector Association="CaseManagerModel.UserGroupRoles" />
+        <EntityTypeShape EntityType="CaseManagerModel.Case" Width="1.5" PointX="5.625" PointY="10" />
+        <EntityTypeShape EntityType="CaseManagerModel.CaseStatus" Width="1.5" PointX="3.375" PointY="10.625" />
+        <AssociationConnector Association="CaseManagerModel.FK_Cases_CaseStatuses" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

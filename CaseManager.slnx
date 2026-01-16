@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="CaseManager.BusinessLogic/CaseManager.BusinessLogic.csproj" Id="c86caca5-9469-46b0-bef3-f34348b6b1f4" />
+  <Project Path="CaseManager.Tests/CaseManager.Tests.csproj" Id="27d4d706-bf1e-4ddb-809d-9755d0b269d1" />
+</Solution>

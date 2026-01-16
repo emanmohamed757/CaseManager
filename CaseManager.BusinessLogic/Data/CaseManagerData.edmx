@@ -1,0 +1,772 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="CaseManagerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Permissions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PermissionSet">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'CaseManager.Authorization.PermissionSetPermissions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="PermissionSetPermissions">
+          <Key>
+            <PropertyRef Name="PermissionSetName" />
+            <PropertyRef Name="PermissionId" />
+          </Key>
+          <Property Name="PermissionSetName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="PermissionId" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'CaseManager.Authorization.PermissionSetRoles' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="PermissionSetRoles">
+          <Key>
+            <PropertyRef Name="PermissionSetName" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="PermissionSetName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'CaseManager.Authorization.RolePermissions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="RolePermissions">
+          <Key>
+            <PropertyRef Name="RoleId" />
+            <PropertyRef Name="PermissionId" />
+          </Key>
+          <Property Name="RoleId" Type="int" Nullable="false" />
+          <Property Name="PermissionId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserGroup">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'CaseManager.Authorization.UserGroupRoles' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="UserGroupRoles">
+          <Key>
+            <PropertyRef Name="UserGroupName" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserGroupName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'CaseManager.Authorization.UserGroupUsers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="UserGroupUsers">
+          <Key>
+            <PropertyRef Name="UserGroupName" />
+            <PropertyRef Name="Username" />
+          </Key>
+          <Property Name="UserGroupName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Username" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'CaseManager.Authorization.UserRoles' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="UserRoles">
+          <Key>
+            <PropertyRef Name="RoleId" />
+            <PropertyRef Name="Username" />
+          </Key>
+          <Property Name="RoleId" Type="int" Nullable="false" />
+          <Property Name="Username" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Cases">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CaseNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="StatusId" Type="int" Nullable="false" />
+          <Property Name="DepartmentId" Type="int" Nullable="false" />
+          <Property Name="CreatedBy" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedBy" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="UpdatedAt" Type="datetime" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CaseStatuses">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Departments">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Designations">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="Username" />
+          </Key>
+          <Property Name="Username" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DesignationId" Type="int" Nullable="false" />
+          <Property Name="DepartmentId" Type="int" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Cases_CaseStatuses">
+          <End Role="CaseStatuses" Type="Self.CaseStatuses" Multiplicity="1" />
+          <End Role="Cases" Type="Self.Cases" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CaseStatuses">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Cases">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employee_Departments">
+          <End Role="Departments" Type="Self.Departments" Multiplicity="1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Departments">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="DepartmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employee_Designations">
+          <End Role="Designations" Type="Self.Designations" Multiplicity="1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Designations">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="DesignationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PermissionSetPermissions_Permissions">
+          <End Role="Permissions" Type="Self.Permissions" Multiplicity="1" />
+          <End Role="PermissionSetPermissions" Type="Self.PermissionSetPermissions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permissions">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PermissionSetPermissions">
+              <PropertyRef Name="PermissionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PermissionSetPermissions_PermissionSet">
+          <End Role="PermissionSet" Type="Self.PermissionSet" Multiplicity="1" />
+          <End Role="PermissionSetPermissions" Type="Self.PermissionSetPermissions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PermissionSet">
+              <PropertyRef Name="Name" />
+            </Principal>
+            <Dependent Role="PermissionSetPermissions">
+              <PropertyRef Name="PermissionSetName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PermissionSetRoles_PermissionSet">
+          <End Role="PermissionSet" Type="Self.PermissionSet" Multiplicity="1" />
+          <End Role="PermissionSetRoles" Type="Self.PermissionSetRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PermissionSet">
+              <PropertyRef Name="Name" />
+            </Principal>
+            <Dependent Role="PermissionSetRoles">
+              <PropertyRef Name="PermissionSetName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PermissionSetRoles_Roles">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="PermissionSetRoles" Type="Self.PermissionSetRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PermissionSetRoles">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RolePermissions_Permissions">
+          <End Role="Permissions" Type="Self.Permissions" Multiplicity="1" />
+          <End Role="RolePermissions" Type="Self.RolePermissions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permissions">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RolePermissions">
+              <PropertyRef Name="PermissionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RolePermissions_Roles">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="RolePermissions" Type="Self.RolePermissions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RolePermissions">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserGroupRoles_Roles">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="UserGroupRoles" Type="Self.UserGroupRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserGroupRoles">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserGroupRoles_UserGroup">
+          <End Role="UserGroup" Type="Self.UserGroup" Multiplicity="1" />
+          <End Role="UserGroupRoles" Type="Self.UserGroupRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserGroup">
+              <PropertyRef Name="Name" />
+            </Principal>
+            <Dependent Role="UserGroupRoles">
+              <PropertyRef Name="UserGroupName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserRoles_Roles">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="UserRoles" Type="Self.UserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserRoles">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CaseManagerModelStoreContainer">
+          <EntitySet Name="Permissions" EntityType="Self.Permissions" Schema="Authorization" store:Type="Tables" />
+          <EntitySet Name="PermissionSet" EntityType="Self.PermissionSet" Schema="Authorization" store:Type="Tables" />
+          <EntitySet Name="Roles" EntityType="Self.Roles" Schema="Authorization" store:Type="Tables" />
+          <EntitySet Name="UserGroup" EntityType="Self.UserGroup" Schema="Authorization" store:Type="Tables" />
+          <EntitySet Name="Cases" EntityType="Self.Cases" Schema="Case" store:Type="Tables" />
+          <EntitySet Name="CaseStatuses" EntityType="Self.CaseStatuses" Schema="Case" store:Type="Tables" />
+          <EntitySet Name="Departments" EntityType="Self.Departments" Schema="HR" store:Type="Tables" />
+          <EntitySet Name="Designations" EntityType="Self.Designations" Schema="HR" store:Type="Tables" />
+          <EntitySet Name="Employee" EntityType="Self.Employee" Schema="HR" store:Type="Tables" />
+          <EntitySet Name="PermissionSetPermissions" EntityType="Self.PermissionSetPermissions" store:Type="Tables" store:Schema="Authorization">
+            <DefiningQuery>SELECT 
+    [PermissionSetPermissions].[PermissionSetName] AS [PermissionSetName], 
+    [PermissionSetPermissions].[PermissionId] AS [PermissionId]
+    FROM [Authorization].[PermissionSetPermissions] AS [PermissionSetPermissions]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="PermissionSetRoles" EntityType="Self.PermissionSetRoles" store:Type="Tables" store:Schema="Authorization">
+            <DefiningQuery>SELECT 
+    [PermissionSetRoles].[PermissionSetName] AS [PermissionSetName], 
+    [PermissionSetRoles].[RoleId] AS [RoleId]
+    FROM [Authorization].[PermissionSetRoles] AS [PermissionSetRoles]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="RolePermissions" EntityType="Self.RolePermissions" store:Type="Tables" store:Schema="Authorization">
+            <DefiningQuery>SELECT 
+    [RolePermissions].[RoleId] AS [RoleId], 
+    [RolePermissions].[PermissionId] AS [PermissionId]
+    FROM [Authorization].[RolePermissions] AS [RolePermissions]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="UserGroupRoles" EntityType="Self.UserGroupRoles" store:Type="Tables" store:Schema="Authorization">
+            <DefiningQuery>SELECT 
+    [UserGroupRoles].[UserGroupName] AS [UserGroupName], 
+    [UserGroupRoles].[RoleId] AS [RoleId]
+    FROM [Authorization].[UserGroupRoles] AS [UserGroupRoles]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="UserGroupUsers" EntityType="Self.UserGroupUsers" store:Type="Tables" store:Schema="Authorization">
+            <DefiningQuery>SELECT 
+    [UserGroupUsers].[UserGroupName] AS [UserGroupName], 
+    [UserGroupUsers].[Username] AS [Username]
+    FROM [Authorization].[UserGroupUsers] AS [UserGroupUsers]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="UserRoles" EntityType="Self.UserRoles" store:Type="Tables" store:Schema="Authorization">
+            <DefiningQuery>SELECT 
+    [UserRoles].[RoleId] AS [RoleId], 
+    [UserRoles].[Username] AS [Username]
+    FROM [Authorization].[UserRoles] AS [UserRoles]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Cases_CaseStatuses" Association="Self.FK_Cases_CaseStatuses">
+            <End Role="CaseStatuses" EntitySet="CaseStatuses" />
+            <End Role="Cases" EntitySet="Cases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_Departments" Association="Self.FK_Employee_Departments">
+            <End Role="Departments" EntitySet="Departments" />
+            <End Role="Employee" EntitySet="Employee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_Designations" Association="Self.FK_Employee_Designations">
+            <End Role="Designations" EntitySet="Designations" />
+            <End Role="Employee" EntitySet="Employee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PermissionSetPermissions_Permissions" Association="Self.FK_PermissionSetPermissions_Permissions">
+            <End Role="Permissions" EntitySet="Permissions" />
+            <End Role="PermissionSetPermissions" EntitySet="PermissionSetPermissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PermissionSetPermissions_PermissionSet" Association="Self.FK_PermissionSetPermissions_PermissionSet">
+            <End Role="PermissionSet" EntitySet="PermissionSet" />
+            <End Role="PermissionSetPermissions" EntitySet="PermissionSetPermissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PermissionSetRoles_PermissionSet" Association="Self.FK_PermissionSetRoles_PermissionSet">
+            <End Role="PermissionSet" EntitySet="PermissionSet" />
+            <End Role="PermissionSetRoles" EntitySet="PermissionSetRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PermissionSetRoles_Roles" Association="Self.FK_PermissionSetRoles_Roles">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="PermissionSetRoles" EntitySet="PermissionSetRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RolePermissions_Permissions" Association="Self.FK_RolePermissions_Permissions">
+            <End Role="Permissions" EntitySet="Permissions" />
+            <End Role="RolePermissions" EntitySet="RolePermissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RolePermissions_Roles" Association="Self.FK_RolePermissions_Roles">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="RolePermissions" EntitySet="RolePermissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserGroupRoles_Roles" Association="Self.FK_UserGroupRoles_Roles">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="UserGroupRoles" EntitySet="UserGroupRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserGroupRoles_UserGroup" Association="Self.FK_UserGroupRoles_UserGroup">
+            <End Role="UserGroup" EntitySet="UserGroup" />
+            <End Role="UserGroupRoles" EntitySet="UserGroupRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRoles_Roles" Association="Self.FK_UserRoles_Roles">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="UserRoles" EntitySet="UserRoles" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CaseManagerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="CaseManagerDbContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Permissions" EntityType="CaseManagerModel.Permission" />
+          <EntitySet Name="PermissionSets" EntityType="CaseManagerModel.PermissionSet" />
+          <EntitySet Name="Roles" EntityType="CaseManagerModel.Role" />
+          <EntitySet Name="UserGroups" EntityType="CaseManagerModel.UserGroup" />
+          <EntitySet Name="Departments" EntityType="CaseManagerModel.Department" />
+          <EntitySet Name="Designations" EntityType="CaseManagerModel.Designation" />
+          <EntitySet Name="Employees" EntityType="CaseManagerModel.Employee" />
+          <EntitySet Name="UserGroupUsers" EntityType="CaseManagerModel.UserGroupUser" />
+          <EntitySet Name="UserRoles" EntityType="CaseManagerModel.UserRole" />
+          <AssociationSet Name="FK_UserRoles_Roles" Association="CaseManagerModel.FK_UserRoles_Roles">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="UserRole" EntitySet="UserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_Departments" Association="CaseManagerModel.FK_Employee_Departments">
+            <End Role="Department" EntitySet="Departments" />
+            <End Role="Employee" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_Designations" Association="CaseManagerModel.FK_Employee_Designations">
+            <End Role="Designation" EntitySet="Designations" />
+            <End Role="Employee" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="PermissionSetPermissions" Association="CaseManagerModel.PermissionSetPermissions">
+            <End Role="Permission" EntitySet="Permissions" />
+            <End Role="PermissionSet" EntitySet="PermissionSets" />
+          </AssociationSet>
+          <AssociationSet Name="PermissionSetRoles" Association="CaseManagerModel.PermissionSetRoles">
+            <End Role="PermissionSet" EntitySet="PermissionSets" />
+            <End Role="Role" EntitySet="Roles" />
+          </AssociationSet>
+          <AssociationSet Name="RolePermissions" Association="CaseManagerModel.RolePermissions">
+            <End Role="Permission" EntitySet="Permissions" />
+            <End Role="Role" EntitySet="Roles" />
+          </AssociationSet>
+          <AssociationSet Name="UserGroupRoles" Association="CaseManagerModel.UserGroupRoles">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="UserGroup" EntitySet="UserGroups" />
+          </AssociationSet>
+          <EntitySet Name="Cases" EntityType="CaseManagerModel.Case" />
+          <EntitySet Name="CaseStatuses" EntityType="CaseManagerModel.CaseStatus" />
+          <AssociationSet Name="FK_Cases_CaseStatuses" Association="CaseManagerModel.FK_Cases_CaseStatuses">
+            <End Role="CaseStatus" EntitySet="CaseStatuses" />
+            <End Role="Case" EntitySet="Cases" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Permission">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="PermissionSets" Relationship="CaseManagerModel.PermissionSetPermissions" FromRole="Permission" ToRole="PermissionSet" />
+          <NavigationProperty Name="Roles" Relationship="CaseManagerModel.RolePermissions" FromRole="Permission" ToRole="Role" />
+        </EntityType>
+        <EntityType Name="PermissionSet">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Permissions" Relationship="CaseManagerModel.PermissionSetPermissions" FromRole="PermissionSet" ToRole="Permission" />
+          <NavigationProperty Name="Roles" Relationship="CaseManagerModel.PermissionSetRoles" FromRole="PermissionSet" ToRole="Role" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="UserRoles" Relationship="CaseManagerModel.FK_UserRoles_Roles" FromRole="Role" ToRole="UserRole" />
+          <NavigationProperty Name="PermissionSets" Relationship="CaseManagerModel.PermissionSetRoles" FromRole="Role" ToRole="PermissionSet" />
+          <NavigationProperty Name="Permissions" Relationship="CaseManagerModel.RolePermissions" FromRole="Role" ToRole="Permission" />
+          <NavigationProperty Name="UserGroups" Relationship="CaseManagerModel.UserGroupRoles" FromRole="Role" ToRole="UserGroup" />
+        </EntityType>
+        <EntityType Name="UserGroup">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Roles" Relationship="CaseManagerModel.UserGroupRoles" FromRole="UserGroup" ToRole="Role" />
+        </EntityType>
+        <EntityType Name="Department">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Employees" Relationship="CaseManagerModel.FK_Employee_Departments" FromRole="Department" ToRole="Employee" />
+        </EntityType>
+        <EntityType Name="Designation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Employees" Relationship="CaseManagerModel.FK_Employee_Designations" FromRole="Designation" ToRole="Employee" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="Username" />
+          </Key>
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DesignationId" Type="Int32" Nullable="false" />
+          <Property Name="DepartmentId" Type="Int32" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Department" Relationship="CaseManagerModel.FK_Employee_Departments" FromRole="Employee" ToRole="Department" />
+          <NavigationProperty Name="Designation" Relationship="CaseManagerModel.FK_Employee_Designations" FromRole="Employee" ToRole="Designation" />
+        </EntityType>
+        <EntityType Name="UserGroupUser">
+          <Key>
+            <PropertyRef Name="UserGroupName" />
+            <PropertyRef Name="Username" />
+          </Key>
+          <Property Name="UserGroupName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="UserRole">
+          <Key>
+            <PropertyRef Name="RoleId" />
+            <PropertyRef Name="Username" />
+          </Key>
+          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Role" Relationship="CaseManagerModel.FK_UserRoles_Roles" FromRole="UserRole" ToRole="Role" />
+        </EntityType>
+        <Association Name="FK_UserRoles_Roles">
+          <End Type="CaseManagerModel.Role" Role="Role" Multiplicity="1" />
+          <End Type="CaseManagerModel.UserRole" Role="UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserRole">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employee_Departments">
+          <End Type="CaseManagerModel.Department" Role="Department" Multiplicity="1" />
+          <End Type="CaseManagerModel.Employee" Role="Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="DepartmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employee_Designations">
+          <End Type="CaseManagerModel.Designation" Role="Designation" Multiplicity="1" />
+          <End Type="CaseManagerModel.Employee" Role="Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Designation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="DesignationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PermissionSetPermissions">
+          <End Type="CaseManagerModel.Permission" Role="Permission" Multiplicity="*" />
+          <End Type="CaseManagerModel.PermissionSet" Role="PermissionSet" Multiplicity="*" />
+        </Association>
+        <Association Name="PermissionSetRoles">
+          <End Type="CaseManagerModel.PermissionSet" Role="PermissionSet" Multiplicity="*" />
+          <End Type="CaseManagerModel.Role" Role="Role" Multiplicity="*" />
+        </Association>
+        <Association Name="RolePermissions">
+          <End Type="CaseManagerModel.Permission" Role="Permission" Multiplicity="*" />
+          <End Type="CaseManagerModel.Role" Role="Role" Multiplicity="*" />
+        </Association>
+        <Association Name="UserGroupRoles">
+          <End Type="CaseManagerModel.Role" Role="Role" Multiplicity="*" />
+          <End Type="CaseManagerModel.UserGroup" Role="UserGroup" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Case">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CaseNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StatusId" Type="Int32" Nullable="false" />
+          <Property Name="DepartmentId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="CaseStatus" Relationship="CaseManagerModel.FK_Cases_CaseStatuses" FromRole="Case" ToRole="CaseStatus" />
+        </EntityType>
+        <EntityType Name="CaseStatus">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Cases" Relationship="CaseManagerModel.FK_Cases_CaseStatuses" FromRole="CaseStatus" ToRole="Case" />
+        </EntityType>
+        <Association Name="FK_Cases_CaseStatuses">
+          <End Type="CaseManagerModel.CaseStatus" Role="CaseStatus" Multiplicity="1" />
+          <End Type="CaseManagerModel.Case" Role="Case" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CaseStatus">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Case">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CaseManagerModelStoreContainer" CdmEntityContainer="CaseManagerDbContext">
+        <EntitySetMapping Name="Permissions">
+            <EntityTypeMapping TypeName="CaseManagerModel.Permission">
+              <MappingFragment StoreEntitySet="Permissions">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PermissionSets">
+            <EntityTypeMapping TypeName="CaseManagerModel.PermissionSet">
+              <MappingFragment StoreEntitySet="PermissionSet">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="CaseManagerModel.Role">
+              <MappingFragment StoreEntitySet="Roles">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserGroups">
+            <EntityTypeMapping TypeName="CaseManagerModel.UserGroup">
+              <MappingFragment StoreEntitySet="UserGroup">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Departments">
+            <EntityTypeMapping TypeName="CaseManagerModel.Department">
+              <MappingFragment StoreEntitySet="Departments">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Designations">
+            <EntityTypeMapping TypeName="CaseManagerModel.Designation">
+              <MappingFragment StoreEntitySet="Designations">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Employees">
+            <EntityTypeMapping TypeName="CaseManagerModel.Employee">
+              <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
+                <ScalarProperty Name="DesignationId" ColumnName="DesignationId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserGroupUsers">
+            <EntityTypeMapping TypeName="CaseManagerModel.UserGroupUser">
+              <MappingFragment StoreEntitySet="UserGroupUsers">
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="UserGroupName" ColumnName="UserGroupName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserRoles">
+            <EntityTypeMapping TypeName="CaseManagerModel.UserRole">
+              <MappingFragment StoreEntitySet="UserRoles">
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="PermissionSetPermissions" TypeName="CaseManagerModel.PermissionSetPermissions" StoreEntitySet="PermissionSetPermissions">
+            <EndProperty Name="PermissionSet">
+              <ScalarProperty Name="Name" ColumnName="PermissionSetName" />
+            </EndProperty>
+            <EndProperty Name="Permission">
+              <ScalarProperty Name="Id" ColumnName="PermissionId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="PermissionSetRoles" TypeName="CaseManagerModel.PermissionSetRoles" StoreEntitySet="PermissionSetRoles">
+            <EndProperty Name="Role">
+              <ScalarProperty Name="Id" ColumnName="RoleId" />
+            </EndProperty>
+            <EndProperty Name="PermissionSet">
+              <ScalarProperty Name="Name" ColumnName="PermissionSetName" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="RolePermissions" TypeName="CaseManagerModel.RolePermissions" StoreEntitySet="RolePermissions">
+            <EndProperty Name="Role">
+              <ScalarProperty Name="Id" ColumnName="RoleId" />
+            </EndProperty>
+            <EndProperty Name="Permission">
+              <ScalarProperty Name="Id" ColumnName="PermissionId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="UserGroupRoles" TypeName="CaseManagerModel.UserGroupRoles" StoreEntitySet="UserGroupRoles">
+            <EndProperty Name="UserGroup">
+              <ScalarProperty Name="Name" ColumnName="UserGroupName" />
+            </EndProperty>
+            <EndProperty Name="Role">
+              <ScalarProperty Name="Id" ColumnName="RoleId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <EntitySetMapping Name="Cases">
+            <EntityTypeMapping TypeName="CaseManagerModel.Case">
+              <MappingFragment StoreEntitySet="Cases">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="CaseNumber" ColumnName="CaseNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CaseStatuses">
+            <EntityTypeMapping TypeName="CaseManagerModel.CaseStatus">
+              <MappingFragment StoreEntitySet="CaseStatuses">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
