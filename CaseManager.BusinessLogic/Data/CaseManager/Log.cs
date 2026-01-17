@@ -14,6 +14,7 @@ namespace CaseManager.BusinessLogic.Data.CaseManager
     
     public partial class Log
     {
+        public int Id { get; set; }
         public string Message { get; set; }
         public System.DateTime CreatedAt { get; set; }
     }

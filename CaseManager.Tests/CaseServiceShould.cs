@@ -103,6 +103,24 @@ namespace CaseManager.Tests
         }
 
         [Fact]
+        public void CreateCase_SetsCreatedByAndUpdatedByToCurrentUser()
+        {
+            // Arrange.
+            var @case = new Case
+            {
+                CaseNumber = "1"
+            };
+
+            // Act.
+            _caseService.CreateCase(@case);
+
+            // Assert.
+            Case updatedCase = _assertCaseManagerDbContext.Cases.Find(@case.Id);
+            Assert.Equal(_mockUserContext.Object.Username, updatedCase.CreatedBy);
+            Assert.Equal(_mockUserContext.Object.Username, updatedCase.UpdatedBy);
+        }
+
+        [Fact]
         public void WhenACaseIsCreated_LogAnEvent()
         {
             // Arrange.

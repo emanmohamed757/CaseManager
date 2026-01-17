@@ -109,9 +109,9 @@ namespace CaseManager.BusinessLogic.Domain.Services
         private void SetAuditProperties(Case @case)
         {
             @case.CreatedAt = DateTime.Today;
-            @case.CreatedBy = "test";
+            @case.CreatedBy = _userContext.Username;
             @case.UpdatedAt = DateTime.Today;
-            @case.UpdatedBy = "test";
+            @case.UpdatedBy = _userContext.Username;
         }
 
         public void RejectCase(int id)

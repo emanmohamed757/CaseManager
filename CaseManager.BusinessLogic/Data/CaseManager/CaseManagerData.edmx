@@ -146,13 +146,11 @@
           <Property Name="RecipientList" Type="nvarchar(max)" />
           <Property Name="CCList" Type="nvarchar(max)" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'CaseManager.General.Logs' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Logs">
           <Key>
-            <PropertyRef Name="Message" />
-            <PropertyRef Name="CreatedAt" />
+            <PropertyRef Name="Id" />
           </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Message" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="CreatedAt" Type="datetime" Nullable="false" />
         </EntityType>
@@ -317,12 +315,7 @@ warning 6002: The table/view 'CaseManager.General.Logs' does not have a primary 
           <EntitySet Name="TeamMembers" EntityType="Self.TeamMembers" Schema="Case" store:Type="Tables" />
           <EntitySet Name="Teams" EntityType="Self.Teams" Schema="Case" store:Type="Tables" />
           <EntitySet Name="Emails" EntityType="Self.Emails" Schema="General" store:Type="Tables" />
-          <EntitySet Name="Logs" EntityType="Self.Logs" store:Type="Tables" store:Schema="General">
-            <DefiningQuery>SELECT 
-    [Logs].[Message] AS [Message], 
-    [Logs].[CreatedAt] AS [CreatedAt]
-    FROM [General].[Logs] AS [Logs]</DefiningQuery>
-          </EntitySet>
+          <EntitySet Name="Logs" EntityType="Self.Logs" Schema="General" store:Type="Tables" />
           <AssociationSet Name="FK_Cases_CaseStatuses" Association="Self.FK_Cases_CaseStatuses">
             <End Role="CaseStatuses" EntitySet="CaseStatuses" />
             <End Role="Cases" EntitySet="Cases" />
@@ -420,8 +413,8 @@ warning 6002: The table/view 'CaseManager.General.Logs' does not have a primary 
             <End Role="Case" EntitySet="Cases" />
             <End Role="ConflictOfInterest" EntitySet="ConflictOfInterests" />
           </AssociationSet>
-          <EntitySet Name="Logs" EntityType="CaseManagerModel.Log" />
           <EntitySet Name="Emails" EntityType="CaseManagerModel.Email" />
+          <EntitySet Name="Logs" EntityType="CaseManagerModel.Log" />
         </EntityContainer>
         <EntityType Name="Permission">
           <Key>
@@ -602,14 +595,6 @@ warning 6002: The table/view 'CaseManager.General.Logs' does not have a primary 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Log">
-          <Key>
-            <PropertyRef Name="Message" />
-            <PropertyRef Name="CreatedAt" />
-          </Key>
-          <Property Name="Message" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
         <EntityType Name="Email">
           <Key>
             <PropertyRef Name="Id" />
@@ -619,6 +604,14 @@ warning 6002: The table/view 'CaseManager.General.Logs' does not have a primary 
           <Property Name="Message" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="RecipientList" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CCList" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Log">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Message" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -765,14 +758,6 @@ warning 6002: The table/view 'CaseManager.General.Logs' does not have a primary 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Logs">
-            <EntityTypeMapping TypeName="CaseManagerModel.Log">
-              <MappingFragment StoreEntitySet="Logs">
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-                <ScalarProperty Name="Message" ColumnName="Message" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Emails">
             <EntityTypeMapping TypeName="CaseManagerModel.Email">
               <MappingFragment StoreEntitySet="Emails">
@@ -780,6 +765,15 @@ warning 6002: The table/view 'CaseManager.General.Logs' does not have a primary 
                 <ScalarProperty Name="RecipientList" ColumnName="RecipientList" />
                 <ScalarProperty Name="Message" ColumnName="Message" />
                 <ScalarProperty Name="Sender" ColumnName="Sender" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Logs">
+            <EntityTypeMapping TypeName="CaseManagerModel.Log">
+              <MappingFragment StoreEntitySet="Logs">
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

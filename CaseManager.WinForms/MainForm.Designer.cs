@@ -37,8 +37,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnCreateCase = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
+            this.unassignedCasesControl1 = new CaseManager.WinForms.UnassignedCasesControl();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -70,6 +72,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.unassignedCasesControl1);
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -132,6 +135,14 @@
             this.label2.TabIndex = 3;
             this.label2.Text = "label2";
             // 
+            // unassignedCasesControl1
+            // 
+            this.unassignedCasesControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.unassignedCasesControl1.Location = new System.Drawing.Point(3, 3);
+            this.unassignedCasesControl1.Name = "unassignedCasesControl1";
+            this.unassignedCasesControl1.Size = new System.Drawing.Size(1045, 547);
+            this.unassignedCasesControl1.TabIndex = 0;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -140,9 +151,11 @@
             this.Controls.Add(this.tabControl1);
             this.Name = "MainForm";
             this.Text = "Case Manager";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -158,5 +171,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtCaseNumber;
         private System.Windows.Forms.Label label2;
+        private UnassignedCasesControl unassignedCasesControl1;
     }
 }
