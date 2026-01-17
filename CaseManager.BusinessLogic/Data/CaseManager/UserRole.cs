@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CaseManager.BusinessLogic.Data
+namespace CaseManager.BusinessLogic.Data.CaseManager
 {
     using System;
     using System.Collections.Generic;

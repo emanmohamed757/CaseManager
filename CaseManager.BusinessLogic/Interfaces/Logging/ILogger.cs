@@ -1,4 +1,4 @@
-﻿namespace CaseManager.BusinessLogic.Interfaces
+﻿namespace CaseManager.BusinessLogic.Interfaces.Logging
 {
     public interface ILogger
     {

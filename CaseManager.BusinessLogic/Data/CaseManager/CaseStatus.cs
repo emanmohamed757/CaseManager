@@ -7,24 +7,23 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CaseManager.BusinessLogic.Data
+namespace CaseManager.BusinessLogic.Data.CaseManager
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Department
+    public partial class CaseStatus
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Department()
+        public CaseStatus()
         {
-            this.Employees = new HashSet<Employee>();
+            this.Cases = new HashSet<Case>();
         }
     
         public int Id { get; set; }
         public string Name { get; set; }
-        public bool IsDeleted { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Employee> Employees { get; set; }
+        public virtual ICollection<Case> Cases { get; set; }
     }
 }

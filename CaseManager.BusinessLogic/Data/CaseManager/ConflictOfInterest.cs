@@ -7,23 +7,19 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CaseManager.BusinessLogic.Data
+namespace CaseManager.BusinessLogic.Data.CaseManager
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class CaseStatus
+    public partial class ConflictOfInterest
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public CaseStatus()
-        {
-            this.Cases = new HashSet<Case>();
-        }
-    
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Username { get; set; }
+        public int CaseId { get; set; }
+        public System.DateTime DeclaredDate { get; set; }
+        public int StaffDesignationLevel { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Case> Cases { get; set; }
+        public virtual Case Case { get; set; }
     }
 }

@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CaseManager.BusinessLogic.Data
+namespace CaseManager.BusinessLogic.Data.CaseManager
 {
     using System;
     using System.Data.Entity;
@@ -29,12 +29,12 @@ namespace CaseManager.BusinessLogic.Data
         public virtual DbSet<PermissionSet> PermissionSets { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<UserGroup> UserGroups { get; set; }
-        public virtual DbSet<Department> Departments { get; set; }
-        public virtual DbSet<Designation> Designations { get; set; }
-        public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<UserGroupUser> UserGroupUsers { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<Case> Cases { get; set; }
         public virtual DbSet<CaseStatus> CaseStatuses { get; set; }
+        public virtual DbSet<Team> Teams { get; set; }
+        public virtual DbSet<TeamMember> TeamMembers { get; set; }
+        public virtual DbSet<ConflictOfInterest> ConflictOfInterests { get; set; }
     }
 }

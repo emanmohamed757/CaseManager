@@ -1,7 +1,8 @@
-﻿namespace CaseManager.BusinessLogic.Enums
+﻿namespace CaseManager.BusinessLogic.Domain.Enums
 {
     public enum PermissionOption
     {
-        ViewAllUnassignedCasesInDepartment = 1
+        ViewAllUnassignedCasesInDepartment = 1,
+        ViewAllOngoingCasesInDepartment = 2,
     }
 }

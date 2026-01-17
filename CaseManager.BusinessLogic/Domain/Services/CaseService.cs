@@ -1,27 +1,41 @@
 ﻿using CaseManager.BusinessLogic.Authorization;
-using CaseManager.BusinessLogic.Data;
-using CaseManager.BusinessLogic.Enums;
-using CaseManager.BusinessLogic.Interfaces;
+using CaseManager.BusinessLogic.Data.CaseManager;
+using CaseManager.BusinessLogic.Domain.Enums;
+using CaseManager.BusinessLogic.Domain.Exceptions;
+using CaseManager.BusinessLogic.Interfaces.Logging;
+using CaseManager.BusinessLogic.Interfaces.Notification;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity;
 using System.Linq;
 
-namespace CaseManager.BusinessLogic.Services
+namespace CaseManager.BusinessLogic.Domain.Services
 {
     public class CaseService
     {
-        // TODO: Is it okay to inject this in the WinForms scenario?
-        private readonly CaseManagerDbContext _dbContext;
+        private readonly IDbContextFactory<CaseManagerDbContext> _caseManagerDbContextFactory;
 
         private readonly ILogger _logger;
 
         private readonly UserContext _userContext;
 
-        public CaseService(CaseManagerDbContext dbContext, ILogger logger, UserContext userContext)
+        private readonly INotificationService _notificationService;
+
+        private readonly NextStatusService _nextStatusService;
+
+        public CaseService(
+            IDbContextFactory<CaseManagerDbContext> caseManagerDbContextFactory,
+            ILogger logger,
+            UserContext userContext,
+            INotificationService notificationService,
+            NextStatusService nextStatusService)
         {
-            _dbContext = dbContext;
+            _caseManagerDbContextFactory = caseManagerDbContextFactory;
             _logger = logger;
             _userContext = userContext;
+            _notificationService = notificationService;
+            _nextStatusService = nextStatusService;
         }
 
         // TODO: Should the presentation layer pass a DTO instead of the data/domain model itself? For now I am passing the data/domain model. Btw, is it "data" or "domain" model?
@@ -29,46 +43,63 @@ namespace CaseManager.BusinessLogic.Services
         {
             // Initial status is "Proposed".
             @case.StatusId = (int)CaseStatusOption.Proposed;
+            @case.DepartmentId = _userContext.DepartmentId;
 
             SetAuditProperties(@case);
 
-            _dbContext.Cases.Add(@case);
-            _dbContext.SaveChanges();
+            using (var dbContext = _caseManagerDbContextFactory.Create())
+            {
+                dbContext.Cases.Add(@case);
+                dbContext.SaveChanges();
+            }
 
             _logger.LogEvent("Case created.");
         }
 
         public void ApproveCase(int caseId)
         {
-            Case @case = _dbContext.Cases.Find(caseId);
-            @case.StatusId = (int)CaseStatusOption.Approved;
-            _dbContext.SaveChanges();
+            Case @case;
+            using (var dbContext = _caseManagerDbContextFactory.Create())
+            {
+                @case = dbContext.Cases.Find(caseId);
+                @case.StatusId = (int)CaseStatusOption.Approved;
+                dbContext.SaveChanges();
+            }
 
             _logger.LogEvent($"Case (Id: {caseId}) approved.");
+
+            _notificationService.Notify(
+                _userContext.Username,
+                "The case was approved",
+                new string[] { @case.CreatedBy },
+                null);
         }
 
         public List<Case> GetUnassignedCases()
         {
-            IQueryable<Case> unassignedCasesQuery = _dbContext.Cases
-                .Where(@case => @case.StatusId == (int)CaseStatusOption.Proposed
-                    || @case.StatusId == (int)CaseStatusOption.Approved);
-
-            bool canUserViewAllCasesInTheirDepartment =
-                _userContext.HasPermission((int)PermissionOption.ViewAllUnassignedCasesInDepartment);
-
-            if (canUserViewAllCasesInTheirDepartment)
+            using (var dbContext = _caseManagerDbContextFactory.Create())
             {
-                // Filter by department of user.
-                return unassignedCasesQuery
-                    .Where(@case => @case.DepartmentId == _userContext.DepartmentId)
-                    .ToList();
-            }
-            else
-            {
-                // Filter by created by user.
-                return unassignedCasesQuery
-                    .Where(@case => @case.CreatedBy == _userContext.Username)
-                    .ToList();
+                IQueryable<Case> unassignedCasesQuery = dbContext.Cases
+                    .Where(@case => @case.StatusId == (int)CaseStatusOption.Proposed
+                        || @case.StatusId == (int)CaseStatusOption.Approved);
+
+                bool canUserViewAllCasesInTheirDepartment =
+                    _userContext.HasPermission((int)PermissionOption.ViewAllUnassignedCasesInDepartment);
+
+                if (canUserViewAllCasesInTheirDepartment)
+                {
+                    // Filter by department of user.
+                    return unassignedCasesQuery
+                        .Where(@case => @case.DepartmentId == _userContext.DepartmentId)
+                        .ToList();
+                }
+                else
+                {
+                    // Filter by created by user.
+                    return unassignedCasesQuery
+                        .Where(@case => @case.CreatedBy == _userContext.Username)
+                        .ToList();
+                }
             }
         }
 
@@ -85,7 +116,131 @@ namespace CaseManager.BusinessLogic.Services
 
         public void RejectCase(int id)
         {
-            //Case @case = _dbContext
+            Case @case;
+            using (var dbContext = _caseManagerDbContextFactory.Create())
+            {
+                @case = dbContext.Cases.Find(id);
+                @case.StatusId = (int)CaseStatusOption.Rejected;
+                dbContext.SaveChanges();
+            }
+
+            _logger.LogEvent($"Case (Id: {@case.Id}) rejected.");
+
+            _notificationService.Notify(
+                _userContext.Username,
+                "The case was rejected",
+                new string[] { @case.CreatedBy },
+                null);
+        }
+
+        public void AssignCase(int caseId, string director, string manager)
+        {
+            Case @case;
+            using (var dbContext = _caseManagerDbContextFactory.Create())
+            {
+                @case = dbContext.Cases.Find(caseId);
+
+                // Only allow approved cases to be assigned.
+                if (@case.StatusId != (int)CaseStatusOption.Approved)
+                {
+                    throw new CaseNotInApprovedStatusException();
+                }
+
+                // Find team leader and team assistant of the team of the given manager.
+                Team managerTeam = dbContext.Teams
+                    .Include(team => team.TeamMembers)
+                    .First(team => team.SupervisorUsername == manager);
+                TeamMember teamLeader = managerTeam.TeamMembers.First(member => member.IsTeamLeader);
+                TeamMember teamAssistant = managerTeam.TeamMembers.First(member => !member.IsTeamLeader);
+
+                // Set case members.
+                @case.DirectorUsername = director;
+                @case.ManagerUsername = manager;
+                @case.TeamLeaderUsername = teamLeader.Username;
+                @case.TeamAssistantUsername = teamAssistant.Username;
+
+                // Change status.
+                @case.StatusId = (int)CaseStatusOption.Assigned;
+
+                dbContext.SaveChanges();
+            }
+
+            _logger.LogEvent($"Case (Id: {@case.Id}) assigned.");
+
+            _notificationService.Notify(
+                _userContext.Username,
+                "The case was assigned",
+                new string[] { @case.TeamLeaderUsername },
+                new string[] { @case.ManagerUsername, @case.TeamAssistantUsername, @case.DirectorUsername });
+        }
+
+        public List<Case> GetOngoingCases()
+        {
+            using (var dbContext = _caseManagerDbContextFactory.Create())
+            {
+                var ongoingCaseStatuses = new int[]
+                {
+                    (int)CaseStatusOption.Assigned,
+                    (int)CaseStatusOption.Planning,
+                    (int)CaseStatusOption.InProgress,
+                    (int)CaseStatusOption.OnHold,
+                    (int)CaseStatusOption.PendingReview,
+                    (int)CaseStatusOption.Disputed,
+                };
+
+                IQueryable<Case> query = dbContext.Cases
+                    .Where(@case => ongoingCaseStatuses.Contains(@case.StatusId));
+
+                bool canUserViewAllCasesInDepartment = _userContext
+                    .HasPermission((int)PermissionOption.ViewAllOngoingCasesInDepartment);
+                if (canUserViewAllCasesInDepartment)
+                {
+                    query = query.Where(@case =>
+                        @case.DepartmentId == _userContext.DepartmentId
+                        || @case.DirectorUsername == _userContext.Username
+                        || @case.ManagerUsername == _userContext.Username
+                        || @case.TeamLeaderUsername == _userContext.Username
+                        || @case.TeamAssistantUsername == _userContext.Username
+                        || @case.CreatedBy == _userContext.Username);
+                }
+                else
+                {
+                    query = query.Where(@case =>
+                        @case.DirectorUsername == _userContext.Username
+                        || @case.ManagerUsername == _userContext.Username
+                        || @case.TeamLeaderUsername == _userContext.Username
+                        || @case.TeamAssistantUsername == _userContext.Username
+                        || @case.CreatedBy == _userContext.Username);
+                }
+
+                return query.ToList();
+            }
+        }
+
+        public void ChangeCaseStatus(int caseId, CaseStatusOption nextStatus)
+        {
+            using (var dbContext = _caseManagerDbContextFactory.Create())
+            {
+                Case @case = dbContext.Cases.Find(caseId);
+
+                // Make sure that the requested status is valid for the case now.
+                List<CaseStatusOption> nextStatuses = _nextStatusService.GetNextStatuses((CaseStatusOption)@case.StatusId);
+                if (!nextStatuses.Contains(nextStatus))
+                {
+                    throw new InvalidStatusException();
+                }
+
+                @case.StatusId = (int)nextStatus;
+                dbContext.SaveChanges();
+            }
+        }
+
+        public List<Case> GetClosedCases()
+        {
+            using (var dbContext = _caseManagerDbContextFactory.Create())
+            {
+                return dbContext.Cases.Where(@case => @case.StatusId == (int)CaseStatusOption.Closed).ToList();
+            }
         }
     }
 }

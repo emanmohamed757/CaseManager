@@ -7,14 +7,17 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CaseManager.BusinessLogic.Data
+namespace CaseManager.BusinessLogic.Data.CaseManager
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class UserGroupUser
+    public partial class TeamMember
     {
-        public string UserGroupName { get; set; }
         public string Username { get; set; }
+        public int TeamId { get; set; }
+        public bool IsTeamLeader { get; set; }
+    
+        public virtual Team Team { get; set; }
     }
 }

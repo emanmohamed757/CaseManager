@@ -1,4 +1,5 @@
 ﻿using CaseManager.BusinessLogic.Data;
+using CaseManager.BusinessLogic.Data.CaseManager;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,8 +19,8 @@ namespace CaseManager.BusinessLogic.Authorization
         public bool HasPermission(int permissionId)
         {
             return EffectivePermissions
-                .Select(permission => permission.Id == permissionId)
-                .Any();
+                ?.Select(permission => permission.Id == permissionId)
+                .Any() ?? false;
         }
     }
 }

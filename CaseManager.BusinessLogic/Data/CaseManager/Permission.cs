@@ -7,25 +7,26 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CaseManager.BusinessLogic.Data
+namespace CaseManager.BusinessLogic.Data.CaseManager
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class PermissionSet
+    public partial class Permission
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public PermissionSet()
+        public Permission()
         {
-            this.Permissions = new HashSet<Permission>();
+            this.PermissionSets = new HashSet<PermissionSet>();
             this.Roles = new HashSet<Role>();
         }
     
-        public string Name { get; set; }
+        public int Id { get; set; }
+        public string Description { get; set; }
         public bool IsDeleted { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Permission> Permissions { get; set; }
+        public virtual ICollection<PermissionSet> PermissionSets { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Role> Roles { get; set; }
     }

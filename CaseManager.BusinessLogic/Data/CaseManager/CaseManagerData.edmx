@@ -20,8 +20,6 @@
           <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'CaseManager.Authorization.PermissionSetPermissions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PermissionSetPermissions">
           <Key>
             <PropertyRef Name="PermissionSetName" />
@@ -30,8 +28,6 @@ warning 6002: The table/view 'CaseManager.Authorization.PermissionSetPermissions
           <Property Name="PermissionSetName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="PermissionId" Type="int" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'CaseManager.Authorization.PermissionSetRoles' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PermissionSetRoles">
           <Key>
             <PropertyRef Name="PermissionSetName" />
@@ -40,8 +36,6 @@ warning 6002: The table/view 'CaseManager.Authorization.PermissionSetRoles' does
           <Property Name="PermissionSetName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="RoleId" Type="int" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'CaseManager.Authorization.RolePermissions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="RolePermissions">
           <Key>
             <PropertyRef Name="RoleId" />
@@ -66,8 +60,6 @@ warning 6002: The table/view 'CaseManager.Authorization.RolePermissions' does no
           <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'CaseManager.Authorization.UserGroupRoles' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="UserGroupRoles">
           <Key>
             <PropertyRef Name="UserGroupName" />
@@ -76,8 +68,6 @@ warning 6002: The table/view 'CaseManager.Authorization.UserGroupRoles' does not
           <Property Name="UserGroupName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="RoleId" Type="int" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'CaseManager.Authorization.UserGroupUsers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="UserGroupUsers">
           <Key>
             <PropertyRef Name="UserGroupName" />
@@ -86,8 +76,6 @@ warning 6002: The table/view 'CaseManager.Authorization.UserGroupUsers' does not
           <Property Name="UserGroupName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Username" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'CaseManager.Authorization.UserRoles' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="UserRoles">
           <Key>
             <PropertyRef Name="RoleId" />
@@ -109,6 +97,10 @@ warning 6002: The table/view 'CaseManager.Authorization.UserRoles' does not have
           <Property Name="UpdatedBy" Type="nvarchar(max)" Nullable="false" />
           <Property Name="UpdatedAt" Type="datetime" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="DirectorUsername" Type="varchar" MaxLength="50" />
+          <Property Name="ManagerUsername" Type="varchar" MaxLength="50" />
+          <Property Name="TeamLeaderUsername" Type="varchar" MaxLength="50" />
+          <Property Name="TeamAssistantUsername" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="CaseStatuses">
           <Key>
@@ -117,31 +109,32 @@ warning 6002: The table/view 'CaseManager.Authorization.UserRoles' does not have
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <EntityType Name="Departments">
+        <EntityType Name="ConflictOfInterests">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="Username" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CaseId" Type="int" Nullable="false" />
+          <Property Name="DeclaredDate" Type="datetime" Nullable="false" />
+          <Property Name="StaffDesignationLevel" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="Designations">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="IsDeleted" Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Employee">
+        <EntityType Name="TeamMembers">
           <Key>
             <PropertyRef Name="Username" />
+            <PropertyRef Name="TeamId" />
           </Key>
           <Property Name="Username" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="DesignationId" Type="int" Nullable="false" />
+          <Property Name="TeamId" Type="int" Nullable="false" />
+          <Property Name="IsTeamLeader" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Teams">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SupervisorUsername" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="DepartmentId" Type="int" Nullable="false" />
-          <Property Name="IsDeleted" Type="bit" Nullable="false" />
         </EntityType>
         <Association Name="FK_Cases_CaseStatuses">
           <End Role="CaseStatuses" Type="Self.CaseStatuses" Multiplicity="1" />
@@ -155,27 +148,15 @@ warning 6002: The table/view 'CaseManager.Authorization.UserRoles' does not have
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Employee_Departments">
-          <End Role="Departments" Type="Self.Departments" Multiplicity="1" />
-          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+        <Association Name="FK_ConflictOfInterests_Cases">
+          <End Role="Cases" Type="Self.Cases" Multiplicity="1" />
+          <End Role="ConflictOfInterests" Type="Self.ConflictOfInterests" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Departments">
+            <Principal Role="Cases">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Employee">
-              <PropertyRef Name="DepartmentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Employee_Designations">
-          <End Role="Designations" Type="Self.Designations" Multiplicity="1" />
-          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Designations">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Employee">
-              <PropertyRef Name="DesignationId" />
+            <Dependent Role="ConflictOfInterests">
+              <PropertyRef Name="CaseId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -251,6 +232,18 @@ warning 6002: The table/view 'CaseManager.Authorization.UserRoles' does not have
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_TeamMembers_Teams">
+          <End Role="Teams" Type="Self.Teams" Multiplicity="1" />
+          <End Role="TeamMembers" Type="Self.TeamMembers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teams">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TeamMembers">
+              <PropertyRef Name="TeamId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_UserGroupRoles_Roles">
           <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
           <End Role="UserGroupRoles" Type="Self.UserGroupRoles" Multiplicity="*" />
@@ -290,60 +283,26 @@ warning 6002: The table/view 'CaseManager.Authorization.UserRoles' does not have
         <EntityContainer Name="CaseManagerModelStoreContainer">
           <EntitySet Name="Permissions" EntityType="Self.Permissions" Schema="Authorization" store:Type="Tables" />
           <EntitySet Name="PermissionSet" EntityType="Self.PermissionSet" Schema="Authorization" store:Type="Tables" />
+          <EntitySet Name="PermissionSetPermissions" EntityType="Self.PermissionSetPermissions" Schema="Authorization" store:Type="Tables" />
+          <EntitySet Name="PermissionSetRoles" EntityType="Self.PermissionSetRoles" Schema="Authorization" store:Type="Tables" />
+          <EntitySet Name="RolePermissions" EntityType="Self.RolePermissions" Schema="Authorization" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="Authorization" store:Type="Tables" />
           <EntitySet Name="UserGroup" EntityType="Self.UserGroup" Schema="Authorization" store:Type="Tables" />
+          <EntitySet Name="UserGroupRoles" EntityType="Self.UserGroupRoles" Schema="Authorization" store:Type="Tables" />
+          <EntitySet Name="UserGroupUsers" EntityType="Self.UserGroupUsers" Schema="Authorization" store:Type="Tables" />
+          <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="Authorization" store:Type="Tables" />
           <EntitySet Name="Cases" EntityType="Self.Cases" Schema="Case" store:Type="Tables" />
           <EntitySet Name="CaseStatuses" EntityType="Self.CaseStatuses" Schema="Case" store:Type="Tables" />
-          <EntitySet Name="Departments" EntityType="Self.Departments" Schema="HR" store:Type="Tables" />
-          <EntitySet Name="Designations" EntityType="Self.Designations" Schema="HR" store:Type="Tables" />
-          <EntitySet Name="Employee" EntityType="Self.Employee" Schema="HR" store:Type="Tables" />
-          <EntitySet Name="PermissionSetPermissions" EntityType="Self.PermissionSetPermissions" store:Type="Tables" store:Schema="Authorization">
-            <DefiningQuery>SELECT 
-    [PermissionSetPermissions].[PermissionSetName] AS [PermissionSetName], 
-    [PermissionSetPermissions].[PermissionId] AS [PermissionId]
-    FROM [Authorization].[PermissionSetPermissions] AS [PermissionSetPermissions]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="PermissionSetRoles" EntityType="Self.PermissionSetRoles" store:Type="Tables" store:Schema="Authorization">
-            <DefiningQuery>SELECT 
-    [PermissionSetRoles].[PermissionSetName] AS [PermissionSetName], 
-    [PermissionSetRoles].[RoleId] AS [RoleId]
-    FROM [Authorization].[PermissionSetRoles] AS [PermissionSetRoles]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="RolePermissions" EntityType="Self.RolePermissions" store:Type="Tables" store:Schema="Authorization">
-            <DefiningQuery>SELECT 
-    [RolePermissions].[RoleId] AS [RoleId], 
-    [RolePermissions].[PermissionId] AS [PermissionId]
-    FROM [Authorization].[RolePermissions] AS [RolePermissions]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="UserGroupRoles" EntityType="Self.UserGroupRoles" store:Type="Tables" store:Schema="Authorization">
-            <DefiningQuery>SELECT 
-    [UserGroupRoles].[UserGroupName] AS [UserGroupName], 
-    [UserGroupRoles].[RoleId] AS [RoleId]
-    FROM [Authorization].[UserGroupRoles] AS [UserGroupRoles]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="UserGroupUsers" EntityType="Self.UserGroupUsers" store:Type="Tables" store:Schema="Authorization">
-            <DefiningQuery>SELECT 
-    [UserGroupUsers].[UserGroupName] AS [UserGroupName], 
-    [UserGroupUsers].[Username] AS [Username]
-    FROM [Authorization].[UserGroupUsers] AS [UserGroupUsers]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="UserRoles" EntityType="Self.UserRoles" store:Type="Tables" store:Schema="Authorization">
-            <DefiningQuery>SELECT 
-    [UserRoles].[RoleId] AS [RoleId], 
-    [UserRoles].[Username] AS [Username]
-    FROM [Authorization].[UserRoles] AS [UserRoles]</DefiningQuery>
-          </EntitySet>
+          <EntitySet Name="ConflictOfInterests" EntityType="Self.ConflictOfInterests" Schema="Case" store:Type="Tables" />
+          <EntitySet Name="TeamMembers" EntityType="Self.TeamMembers" Schema="Case" store:Type="Tables" />
+          <EntitySet Name="Teams" EntityType="Self.Teams" Schema="Case" store:Type="Tables" />
           <AssociationSet Name="FK_Cases_CaseStatuses" Association="Self.FK_Cases_CaseStatuses">
             <End Role="CaseStatuses" EntitySet="CaseStatuses" />
             <End Role="Cases" EntitySet="Cases" />
           </AssociationSet>
-          <AssociationSet Name="FK_Employee_Departments" Association="Self.FK_Employee_Departments">
-            <End Role="Departments" EntitySet="Departments" />
-            <End Role="Employee" EntitySet="Employee" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Employee_Designations" Association="Self.FK_Employee_Designations">
-            <End Role="Designations" EntitySet="Designations" />
-            <End Role="Employee" EntitySet="Employee" />
+          <AssociationSet Name="FK_ConflictOfInterests_Cases" Association="Self.FK_ConflictOfInterests_Cases">
+            <End Role="Cases" EntitySet="Cases" />
+            <End Role="ConflictOfInterests" EntitySet="ConflictOfInterests" />
           </AssociationSet>
           <AssociationSet Name="FK_PermissionSetPermissions_Permissions" Association="Self.FK_PermissionSetPermissions_Permissions">
             <End Role="Permissions" EntitySet="Permissions" />
@@ -369,6 +328,10 @@ warning 6002: The table/view 'CaseManager.Authorization.UserRoles' does not have
             <End Role="Roles" EntitySet="Roles" />
             <End Role="RolePermissions" EntitySet="RolePermissions" />
           </AssociationSet>
+          <AssociationSet Name="FK_TeamMembers_Teams" Association="Self.FK_TeamMembers_Teams">
+            <End Role="Teams" EntitySet="Teams" />
+            <End Role="TeamMembers" EntitySet="TeamMembers" />
+          </AssociationSet>
           <AssociationSet Name="FK_UserGroupRoles_Roles" Association="Self.FK_UserGroupRoles_Roles">
             <End Role="Roles" EntitySet="Roles" />
             <End Role="UserGroupRoles" EntitySet="UserGroupRoles" />
@@ -391,22 +354,11 @@ warning 6002: The table/view 'CaseManager.Authorization.UserRoles' does not have
           <EntitySet Name="PermissionSets" EntityType="CaseManagerModel.PermissionSet" />
           <EntitySet Name="Roles" EntityType="CaseManagerModel.Role" />
           <EntitySet Name="UserGroups" EntityType="CaseManagerModel.UserGroup" />
-          <EntitySet Name="Departments" EntityType="CaseManagerModel.Department" />
-          <EntitySet Name="Designations" EntityType="CaseManagerModel.Designation" />
-          <EntitySet Name="Employees" EntityType="CaseManagerModel.Employee" />
           <EntitySet Name="UserGroupUsers" EntityType="CaseManagerModel.UserGroupUser" />
           <EntitySet Name="UserRoles" EntityType="CaseManagerModel.UserRole" />
           <AssociationSet Name="FK_UserRoles_Roles" Association="CaseManagerModel.FK_UserRoles_Roles">
             <End Role="Role" EntitySet="Roles" />
             <End Role="UserRole" EntitySet="UserRoles" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Employee_Departments" Association="CaseManagerModel.FK_Employee_Departments">
-            <End Role="Department" EntitySet="Departments" />
-            <End Role="Employee" EntitySet="Employees" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Employee_Designations" Association="CaseManagerModel.FK_Employee_Designations">
-            <End Role="Designation" EntitySet="Designations" />
-            <End Role="Employee" EntitySet="Employees" />
           </AssociationSet>
           <AssociationSet Name="PermissionSetPermissions" Association="CaseManagerModel.PermissionSetPermissions">
             <End Role="Permission" EntitySet="Permissions" />
@@ -429,6 +381,17 @@ warning 6002: The table/view 'CaseManager.Authorization.UserRoles' does not have
           <AssociationSet Name="FK_Cases_CaseStatuses" Association="CaseManagerModel.FK_Cases_CaseStatuses">
             <End Role="CaseStatus" EntitySet="CaseStatuses" />
             <End Role="Case" EntitySet="Cases" />
+          </AssociationSet>
+          <EntitySet Name="Teams" EntityType="CaseManagerModel.Team" />
+          <EntitySet Name="TeamMembers" EntityType="CaseManagerModel.TeamMember" />
+          <AssociationSet Name="FK_TeamMembers_Teams" Association="CaseManagerModel.FK_TeamMembers_Teams">
+            <End Role="Team" EntitySet="Teams" />
+            <End Role="TeamMember" EntitySet="TeamMembers" />
+          </AssociationSet>
+          <EntitySet Name="ConflictOfInterests" EntityType="CaseManagerModel.ConflictOfInterest" />
+          <AssociationSet Name="FK_ConflictOfInterests_Cases" Association="CaseManagerModel.FK_ConflictOfInterests_Cases">
+            <End Role="Case" EntitySet="Cases" />
+            <End Role="ConflictOfInterest" EntitySet="ConflictOfInterests" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Permission">
@@ -471,36 +434,6 @@ warning 6002: The table/view 'CaseManager.Authorization.UserRoles' does not have
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Roles" Relationship="CaseManagerModel.UserGroupRoles" FromRole="UserGroup" ToRole="Role" />
         </EntityType>
-        <EntityType Name="Department">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Employees" Relationship="CaseManagerModel.FK_Employee_Departments" FromRole="Department" ToRole="Employee" />
-        </EntityType>
-        <EntityType Name="Designation">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Employees" Relationship="CaseManagerModel.FK_Employee_Designations" FromRole="Designation" ToRole="Employee" />
-        </EntityType>
-        <EntityType Name="Employee">
-          <Key>
-            <PropertyRef Name="Username" />
-          </Key>
-          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="DesignationId" Type="Int32" Nullable="false" />
-          <Property Name="DepartmentId" Type="Int32" Nullable="false" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Department" Relationship="CaseManagerModel.FK_Employee_Departments" FromRole="Employee" ToRole="Department" />
-          <NavigationProperty Name="Designation" Relationship="CaseManagerModel.FK_Employee_Designations" FromRole="Employee" ToRole="Designation" />
-        </EntityType>
         <EntityType Name="UserGroupUser">
           <Key>
             <PropertyRef Name="UserGroupName" />
@@ -527,30 +460,6 @@ warning 6002: The table/view 'CaseManager.Authorization.UserRoles' does not have
             </Principal>
             <Dependent Role="UserRole">
               <PropertyRef Name="RoleId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Employee_Departments">
-          <End Type="CaseManagerModel.Department" Role="Department" Multiplicity="1" />
-          <End Type="CaseManagerModel.Employee" Role="Employee" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Department">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Employee">
-              <PropertyRef Name="DepartmentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Employee_Designations">
-          <End Type="CaseManagerModel.Designation" Role="Designation" Multiplicity="1" />
-          <End Type="CaseManagerModel.Employee" Role="Employee" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Designation">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Employee">
-              <PropertyRef Name="DesignationId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -584,6 +493,11 @@ warning 6002: The table/view 'CaseManager.Authorization.UserRoles' does not have
           <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="CaseStatus" Relationship="CaseManagerModel.FK_Cases_CaseStatuses" FromRole="Case" ToRole="CaseStatus" />
+          <Property Name="DirectorUsername" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ManagerUsername" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TeamLeaderUsername" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TeamAssistantUsername" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ConflictOfInterests" Relationship="CaseManagerModel.FK_ConflictOfInterests_Cases" FromRole="Case" ToRole="ConflictOfInterest" />
         </EntityType>
         <EntityType Name="CaseStatus">
           <Key>
@@ -602,6 +516,60 @@ warning 6002: The table/view 'CaseManager.Authorization.UserRoles' does not have
             </Principal>
             <Dependent Role="Case">
               <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Team">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SupervisorUsername" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DepartmentId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TeamMembers" Relationship="CaseManagerModel.FK_TeamMembers_Teams" FromRole="Team" ToRole="TeamMember" />
+        </EntityType>
+        <EntityType Name="TeamMember">
+          <Key>
+            <PropertyRef Name="Username" />
+            <PropertyRef Name="TeamId" />
+          </Key>
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TeamId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Team" Relationship="CaseManagerModel.FK_TeamMembers_Teams" FromRole="TeamMember" ToRole="Team" />
+          <Property Name="IsTeamLeader" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_TeamMembers_Teams">
+          <End Type="CaseManagerModel.Team" Role="Team" Multiplicity="1" />
+          <End Type="CaseManagerModel.TeamMember" Role="TeamMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TeamMember">
+              <PropertyRef Name="TeamId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ConflictOfInterest">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CaseId" Type="Int32" Nullable="false" />
+          <Property Name="DeclaredDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="StaffDesignationLevel" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Case" Relationship="CaseManagerModel.FK_ConflictOfInterests_Cases" FromRole="ConflictOfInterest" ToRole="Case" />
+        </EntityType>
+        <Association Name="FK_ConflictOfInterests_Cases">
+          <End Type="CaseManagerModel.Case" Role="Case" Multiplicity="1" />
+          <End Type="CaseManagerModel.ConflictOfInterest" Role="ConflictOfInterest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Case">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ConflictOfInterest">
+              <PropertyRef Name="CaseId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -643,35 +611,6 @@ warning 6002: The table/view 'CaseManager.Authorization.UserRoles' does not have
               <MappingFragment StoreEntitySet="UserGroup">
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Departments">
-            <EntityTypeMapping TypeName="CaseManagerModel.Department">
-              <MappingFragment StoreEntitySet="Departments">
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Designations">
-            <EntityTypeMapping TypeName="CaseManagerModel.Designation">
-              <MappingFragment StoreEntitySet="Designations">
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Employees">
-            <EntityTypeMapping TypeName="CaseManagerModel.Employee">
-              <MappingFragment StoreEntitySet="Employee">
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
-                <ScalarProperty Name="DesignationId" ColumnName="DesignationId" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Username" ColumnName="Username" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -726,6 +665,10 @@ warning 6002: The table/view 'CaseManager.Authorization.UserRoles' does not have
           <EntitySetMapping Name="Cases">
             <EntityTypeMapping TypeName="CaseManagerModel.Case">
               <MappingFragment StoreEntitySet="Cases">
+                <ScalarProperty Name="TeamAssistantUsername" ColumnName="TeamAssistantUsername" />
+                <ScalarProperty Name="TeamLeaderUsername" ColumnName="TeamLeaderUsername" />
+                <ScalarProperty Name="ManagerUsername" ColumnName="ManagerUsername" />
+                <ScalarProperty Name="DirectorUsername" ColumnName="DirectorUsername" />
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
                 <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
@@ -742,6 +685,35 @@ warning 6002: The table/view 'CaseManager.Authorization.UserRoles' does not have
             <EntityTypeMapping TypeName="CaseManagerModel.CaseStatus">
               <MappingFragment StoreEntitySet="CaseStatuses">
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Teams">
+            <EntityTypeMapping TypeName="CaseManagerModel.Team">
+              <MappingFragment StoreEntitySet="Teams">
+                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
+                <ScalarProperty Name="SupervisorUsername" ColumnName="SupervisorUsername" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TeamMembers">
+            <EntityTypeMapping TypeName="CaseManagerModel.TeamMember">
+              <MappingFragment StoreEntitySet="TeamMembers">
+                <ScalarProperty Name="IsTeamLeader" ColumnName="IsTeamLeader" />
+                <ScalarProperty Name="TeamId" ColumnName="TeamId" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ConflictOfInterests">
+            <EntityTypeMapping TypeName="CaseManagerModel.ConflictOfInterest">
+              <MappingFragment StoreEntitySet="ConflictOfInterests">
+                <ScalarProperty Name="StaffDesignationLevel" ColumnName="StaffDesignationLevel" />
+                <ScalarProperty Name="DeclaredDate" ColumnName="DeclaredDate" />
+                <ScalarProperty Name="CaseId" ColumnName="CaseId" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

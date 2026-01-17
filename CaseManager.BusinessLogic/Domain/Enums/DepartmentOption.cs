@@ -1,4 +1,4 @@
-﻿namespace CaseManager.BusinessLogic.Enums
+﻿namespace CaseManager.BusinessLogic.Domain.Enums
 {
     public enum DepartmentOption
     {

@@ -1,6 +1,6 @@
 ﻿using System.Data.Common;
 
-namespace CaseManager.BusinessLogic.Data
+namespace CaseManager.BusinessLogic.Data.CaseManager
 {
     public partial class CaseManagerDbContext
     {
@@ -8,7 +8,7 @@ namespace CaseManager.BusinessLogic.Data
         /// This is used by Effort library in unit tests.
         /// </summary>
         public CaseManagerDbContext(DbConnection connection)
-            : base(connection, true)
+            : base(connection, false)
         {
         }
     }

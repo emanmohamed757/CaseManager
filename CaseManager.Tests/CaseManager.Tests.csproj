@@ -106,7 +106,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CaseServiceShould.cs" />
+    <Compile Include="ConflictOfInterestServiceMethod.cs" />
+    <Compile Include="NextStatusServiceMethod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TeamServiceMethod.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
