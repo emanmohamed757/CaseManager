@@ -24,6 +24,8 @@
         <AssociationConnector Association="CaseManagerModel.FK_TeamMembers_Teams" />
         <EntityTypeShape EntityType="CaseManagerModel.ConflictOfInterest" Width="1.5" PointX="7.875" PointY="10.875" />
         <AssociationConnector Association="CaseManagerModel.FK_ConflictOfInterests_Cases" />
+        <EntityTypeShape EntityType="CaseManagerModel.Log" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="CaseManagerModel.Email" Width="1.5" PointX="5.375" PointY="0.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

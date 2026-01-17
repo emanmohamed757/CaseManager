@@ -1,4 +1,6 @@
 <Solution>
   <Project Path="CaseManager.BusinessLogic/CaseManager.BusinessLogic.csproj" Id="c86caca5-9469-46b0-bef3-f34348b6b1f4" />
+  <Project Path="CaseManager.Infrastructure/CaseManager.Infrastructure.csproj" Id="27032d58-e1ab-477b-9062-d10bc989d995" />
   <Project Path="CaseManager.Tests/CaseManager.Tests.csproj" Id="27d4d706-bf1e-4ddb-809d-9755d0b269d1" />
+  <Project Path="CaseManager.WinForms/CaseManager.WinForms.csproj" Id="7994d102-09c4-482d-b7da-ad0e4bb30796" />
 </Solution>

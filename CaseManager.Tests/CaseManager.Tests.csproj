@@ -105,6 +105,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuthorizationServiceMethod.cs" />
     <Compile Include="CaseServiceShould.cs" />
     <Compile Include="ConflictOfInterestServiceMethod.cs" />
     <Compile Include="NextStatusServiceMethod.cs" />

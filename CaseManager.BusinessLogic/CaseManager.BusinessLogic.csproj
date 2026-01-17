@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authorization\AuthorizationService.cs" />
     <Compile Include="Data\CaseManager\Case.cs">
       <DependentUpon>CaseManagerData.tt</DependentUpon>
     </Compile>
@@ -76,6 +77,12 @@
       <DependentUpon>CaseManagerData.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\CaseManager\ConflictOfInterest.cs">
+      <DependentUpon>CaseManagerData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CaseManager\Email.cs">
+      <DependentUpon>CaseManagerData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CaseManager\Log.cs">
       <DependentUpon>CaseManagerData.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\CaseManager\Team.cs">
@@ -127,6 +134,7 @@
     <Compile Include="Data\CaseManager\UserRole.cs">
       <DependentUpon>CaseManagerData.tt</DependentUpon>
     </Compile>
+    <Compile Include="Data\HR\HRDbContextPart.cs" />
     <Compile Include="Domain\Enums\CaseStatusOption.cs" />
     <Compile Include="Domain\Enums\ConflictOfInterestStaffDesignationLevel.cs" />
     <Compile Include="Domain\Enums\DepartmentOption.cs" />
