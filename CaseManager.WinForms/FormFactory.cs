@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using System;
+using System.Windows.Forms;
 
 namespace CaseManager.WinForms
 {
@@ -12,20 +13,31 @@ namespace CaseManager.WinForms
             _container = container;
         }
 
-        public static LoginForm CreateLoginForm()
+        /// <summary>
+        /// Instantiates a Form that does not take free parameters (parameters that are not injected by the DI container).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T Create<T>()
+            where T : Form
         {
-            return _container.Resolve<LoginForm>();
-        }
+            ILifetimeScope scope = _container.BeginLifetimeScope();
 
-        public static MainForm CreateMainForm()
-        {
-            return _container.Resolve<MainForm>();
+            var form = scope.Resolve<T>();
+
+            form.FormClosed += (_, __) => scope.Dispose();
+            return form;
         }
 
         public static AnotherForm CreateAnotherForm(string message)
         {
-            return _container.Resolve<AnotherForm>(
+            ILifetimeScope scope = _container.BeginLifetimeScope();
+
+            var form = _container.Resolve<AnotherForm>(
                 new TypedParameter(typeof(string), message));
+
+            form.FormClosed += (_, __) => scope.Dispose();
+            return form;
         }
     }
 }

@@ -35,10 +35,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.txtCaseNumber = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.unassignedCasesControl1 = new CaseManager.WinForms.UnassignedCasesControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.button1 = new System.Windows.Forms.Button();
+            this.unassignedCasesControl1 = new CaseManager.WinForms.UnassignedCasesControl();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -119,14 +119,6 @@
             this.tabPage2.Text = "Unassigned Cases";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // unassignedCasesControl1
-            // 
-            this.unassignedCasesControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.unassignedCasesControl1.Location = new System.Drawing.Point(3, 3);
-            this.unassignedCasesControl1.Name = "unassignedCasesControl1";
-            this.unassignedCasesControl1.Size = new System.Drawing.Size(1045, 547);
-            this.unassignedCasesControl1.TabIndex = 0;
-            // 
             // tabPage3
             // 
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
@@ -147,13 +139,21 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(634, 306);
+            this.button1.Location = new System.Drawing.Point(241, 241);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(160, 23);
+            this.button1.Size = new System.Drawing.Size(132, 23);
             this.button1.TabIndex = 4;
             this.button1.Text = "Open another form";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // unassignedCasesControl1
+            // 
+            this.unassignedCasesControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.unassignedCasesControl1.Location = new System.Drawing.Point(3, 3);
+            this.unassignedCasesControl1.Name = "unassignedCasesControl1";
+            this.unassignedCasesControl1.Size = new System.Drawing.Size(1045, 547);
+            this.unassignedCasesControl1.TabIndex = 0;
             // 
             // MainForm
             // 

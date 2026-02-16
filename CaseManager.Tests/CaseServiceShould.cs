@@ -3,10 +3,10 @@ using CaseManager.BusinessLogic.Data.CaseManager;
 using CaseManager.BusinessLogic.Domain.Enums;
 using CaseManager.BusinessLogic.Domain.Exceptions;
 using CaseManager.BusinessLogic.Domain.Services;
-using CaseManager.BusinessLogic.Interfaces.Logging;
 using CaseManager.BusinessLogic.Interfaces.Notification;
 using Effort.DataLoaders;
 using Moq;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -24,11 +24,12 @@ namespace CaseManager.Tests
 
         private readonly CaseManagerDbContext _assertCaseManagerDbContext;
 
-        private readonly Mock<ILogger> _mockLogger;
 
         private readonly Mock<INotificationService> _mockNotificationService;
 
         private readonly Mock<UserContext> _mockUserContext;
+
+        private readonly Mock<ILogger> _mockLogger;
 
         public CaseServiceShould()
         {
@@ -57,8 +58,8 @@ namespace CaseManager.Tests
             // This is the system under test.
             _caseService = new CaseService(
                 mockCaseManagerDbContextFactory.Object,
-                _mockLogger.Object,
                 _mockUserContext.Object,
+                _mockLogger.Object,
                 _mockNotificationService.Object,
                 nextStatusService);
         }
@@ -133,7 +134,7 @@ namespace CaseManager.Tests
             _caseService.CreateCase(@case);
 
             // Assert.
-            _mockLogger.Verify(x => x.LogEvent(It.IsAny<string>()));
+            _mockLogger.Verify(x => x.Information(It.IsAny<string>()));
         }
 
         [Fact]
@@ -256,7 +257,7 @@ namespace CaseManager.Tests
             _caseService.ApproveCase(caseWithProposedStatus.Id);
 
             // Assert.
-            _mockLogger.Verify(x => x.LogEvent(It.IsAny<string>()));
+            _mockLogger.Verify(x => x.Information(It.IsAny<string>()));
         }
         #endregion
 
@@ -492,7 +493,7 @@ namespace CaseManager.Tests
             _caseService.RejectCase(@case.Id);
 
             // Assert.
-            _mockLogger.Verify(x => x.LogEvent(It.IsAny<string>()));
+            _mockLogger.Verify(x => x.Information(It.IsAny<string>()));
         }
 
         private Case RejectCaseArrange()

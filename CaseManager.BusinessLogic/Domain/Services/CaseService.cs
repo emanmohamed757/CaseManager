@@ -2,13 +2,13 @@
 using CaseManager.BusinessLogic.Data.CaseManager;
 using CaseManager.BusinessLogic.Domain.Enums;
 using CaseManager.BusinessLogic.Domain.Exceptions;
-using CaseManager.BusinessLogic.Interfaces.Logging;
 using CaseManager.BusinessLogic.Interfaces.Notification;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity;
 using System.Linq;
+using Serilog;
 
 namespace CaseManager.BusinessLogic.Domain.Services
 {
@@ -16,9 +16,10 @@ namespace CaseManager.BusinessLogic.Domain.Services
     {
         private readonly IDbContextFactory<CaseManagerDbContext> _caseManagerDbContextFactory;
 
-        private readonly ILogger _logger;
 
         private readonly UserContext _userContext;
+
+        private readonly ILogger _logger;
 
         private readonly INotificationService _notificationService;
 
@@ -26,14 +27,14 @@ namespace CaseManager.BusinessLogic.Domain.Services
 
         public CaseService(
             IDbContextFactory<CaseManagerDbContext> caseManagerDbContextFactory,
-            ILogger logger,
             UserContext userContext,
+            ILogger logger,
             INotificationService notificationService,
             NextStatusService nextStatusService)
         {
             _caseManagerDbContextFactory = caseManagerDbContextFactory;
-            _logger = logger;
             _userContext = userContext;
+            _logger = logger.ForContext<CaseService>();
             _notificationService = notificationService;
             _nextStatusService = nextStatusService;
         }
@@ -53,7 +54,7 @@ namespace CaseManager.BusinessLogic.Domain.Services
                 dbContext.SaveChanges();
             }
 
-            _logger.LogEvent("Case created.");
+            _logger.Information("Case created.");
         }
 
         public void ApproveCase(int caseId)
@@ -66,7 +67,7 @@ namespace CaseManager.BusinessLogic.Domain.Services
                 dbContext.SaveChanges();
             }
 
-            _logger.LogEvent($"Case (Id: {caseId}) approved.");
+            _logger.Information($"Case (Id: {caseId}) approved.");
 
             _notificationService.Notify(
                 "The case was approved",
@@ -83,17 +84,20 @@ namespace CaseManager.BusinessLogic.Domain.Services
                     .Where(@case => @case.StatusId == (int)CaseStatusOption.Proposed
                         || @case.StatusId == (int)CaseStatusOption.Approved);
 
+                _logger.Verbose("Checking whether user has permission to ViewAllCasesInTheDepartment.");
                 bool canViewAllCasesInTheDepartment =
                     _userContext.HasPermission((int)PermissionOption.ViewAllUnassignedCasesInDepartment);
 
                 if (canViewAllCasesInTheDepartment)
                 {
+                    _logger.Verbose("User has permission to ViewAllCasesInTheDepartment.");
                     // Filter by department of user.
                     unassignedCasesQuery = unassignedCasesQuery
                         .Where(@case => @case.DepartmentId == _userContext.DepartmentId);
                 }
                 else
                 {
+                    _logger.Verbose("User does not have permission to ViewAllCasesInTheDepartment.");
                     // Filter by created by user.
                     unassignedCasesQuery = unassignedCasesQuery
                         .Where(@case => @case.CreatedBy == _userContext.Username);
@@ -124,7 +128,7 @@ namespace CaseManager.BusinessLogic.Domain.Services
                 dbContext.SaveChanges();
             }
 
-            _logger.LogEvent($"Case (Id: {@case.Id}) rejected.");
+            _logger.Information($"Case (Id: {@case.Id}) rejected.");
 
             _notificationService.Notify(
                 "The case was rejected",
@@ -164,7 +168,7 @@ namespace CaseManager.BusinessLogic.Domain.Services
                 dbContext.SaveChanges();
             }
 
-            _logger.LogEvent($"Case (Id: {@case.Id}) assigned.");
+            _logger.Information($"Case (Id: {@case.Id}) assigned.");
 
             _notificationService.Notify(
                 "The case was assigned",

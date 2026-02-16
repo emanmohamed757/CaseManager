@@ -3,7 +3,6 @@ using CaseManager.BusinessLogic.Data.CaseManager;
 using CaseManager.BusinessLogic.Data.HR;
 using CaseManager.BusinessLogic.Domain.Enums;
 using CaseManager.BusinessLogic.Domain.Exceptions;
-using CaseManager.BusinessLogic.Interfaces.Logging;
 using CaseManager.BusinessLogic.Interfaces.Notification;
 using System;
 using System.Collections.Generic;
@@ -18,7 +17,6 @@ namespace CaseManager.BusinessLogic.Domain.Services
 
         private readonly IDbContextFactory<HRDbContext> _hrDbContextFactory;
 
-        private readonly ILogger _logger;
 
         private readonly UserContext _userContext;
 
@@ -27,13 +25,11 @@ namespace CaseManager.BusinessLogic.Domain.Services
         public ConflictOfInterestService(
             IDbContextFactory<CaseManagerDbContext> caseManagerDbContextFactory,
             IDbContextFactory<HRDbContext> hrDbContextFactory,
-            ILogger logger,
             UserContext userContext,
             INotificationService notificationService)
         {
             _caseManagerDbContextFactory = caseManagerDbContextFactory;
             _hrDbContextFactory = hrDbContextFactory;
-            _logger = logger;
             _userContext = userContext;
             _notificationService = notificationService;
         }

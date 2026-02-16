@@ -4,10 +4,9 @@ using CaseManager.BusinessLogic.Data;
 using CaseManager.BusinessLogic.Data.CaseManager;
 using CaseManager.BusinessLogic.Data.HR;
 using CaseManager.BusinessLogic.Domain.Services;
-using CaseManager.BusinessLogic.Interfaces.Logging;
 using CaseManager.BusinessLogic.Interfaces.Notification;
-using CaseManager.Infrastructure.Logging;
 using CaseManager.Infrastructure.Notification;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
@@ -25,6 +24,15 @@ namespace CaseManager.WinForms
         [STAThread]
         static void Main()
         {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .WriteTo.Console()
+                .WriteTo.Seq("http://localhost:5341/")
+                .CreateLogger();
+
             var builder = new ContainerBuilder();
             RegisterServices(builder);
             RegisterForms(builder);
@@ -32,26 +40,22 @@ namespace CaseManager.WinForms
 
             FormFactory.SetContainer(container);
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-
-            LoginForm loginForm = FormFactory.CreateLoginForm();
-
+            LoginForm loginForm = FormFactory.Create<LoginForm>();
             if (loginForm.ShowDialog() == DialogResult.OK)
             {
-                Application.Run(FormFactory.CreateMainForm());
+                Application.Run(FormFactory.Create<MainForm>());
             }
         }
 
         private static void RegisterServices(ContainerBuilder builder)
         {
-            builder.RegisterType<UserContext>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterInstance(Log.Logger).As<ILogger>();
+            builder.RegisterType<UserContext>().AsSelf().SingleInstance();
             builder.RegisterType<AuthorizationService>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<CaseService>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<NextStatusService>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<DbContextFactory<HRDbContext>>().As<IDbContextFactory<HRDbContext>>().InstancePerLifetimeScope();
             builder.RegisterType<DbContextFactory<CaseManagerDbContext>>().As<IDbContextFactory<CaseManagerDbContext>>().InstancePerLifetimeScope();
-            builder.RegisterType<EFLogger>().As<ILogger>().InstancePerLifetimeScope();
             builder.RegisterType<EFNotificationService>().As<INotificationService>().InstancePerLifetimeScope();
         }
 

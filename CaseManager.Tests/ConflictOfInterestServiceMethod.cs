@@ -4,7 +4,6 @@ using CaseManager.BusinessLogic.Data.HR;
 using CaseManager.BusinessLogic.Domain.Enums;
 using CaseManager.BusinessLogic.Domain.Exceptions;
 using CaseManager.BusinessLogic.Domain.Services;
-using CaseManager.BusinessLogic.Interfaces.Logging;
 using CaseManager.BusinessLogic.Interfaces.Notification;
 using CaseManager.Tests.Helpers;
 using Effort.DataLoaders;
@@ -29,8 +28,6 @@ namespace CaseManager.Tests
 
         private readonly HRDbContext _assertHRDbContext;
 
-        private readonly Mock<ILogger> _mockLogger;
-
         private readonly Mock<INotificationService> _mockNotificationService;
 
         private readonly Mock<UserContext> _mockUserContext;
@@ -39,7 +36,6 @@ namespace CaseManager.Tests
 
         public ConflictOfInterestServiceMethod()
         {
-            _mockLogger = new Mock<ILogger>();
             _mockNotificationService = new Mock<INotificationService>();
             _mockUserContext = new Mock<UserContext>();
             _mockUserContext.SetupAllProperties();
@@ -75,7 +71,6 @@ namespace CaseManager.Tests
             _conflictOfInterestService = new ConflictOfInterestService(
                 mockCaseManagerDbContextFactory.Object,
                 mockHRDbContextFactory.Object,
-                _mockLogger.Object,
                 _mockUserContext.Object,
                 _mockNotificationService.Object);
 
