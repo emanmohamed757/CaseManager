@@ -21,5 +21,11 @@ namespace CaseManager.WinForms
         {
             return _container.Resolve<MainForm>();
         }
+
+        public static AnotherForm CreateAnotherForm(string message)
+        {
+            return _container.Resolve<AnotherForm>(
+                new TypedParameter(typeof(string), message));
+        }
     }
 }

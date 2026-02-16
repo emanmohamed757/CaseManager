@@ -30,14 +30,15 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label2 = new System.Windows.Forms.Label();
+            this.btnCreateCase = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtCaseNumber = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.unassignedCasesControl1 = new CaseManager.WinForms.UnassignedCasesControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.txtCaseNumber = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btnCreateCase = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.unassignedCasesControl1 = new CaseManager.WinForms.UnassignedCasesControl();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -58,6 +59,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.button1);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.btnCreateCase);
             this.tabPage1.Controls.Add(this.label1);
@@ -70,6 +72,42 @@
             this.tabPage1.Text = "Create Case";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(19, 42);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(92, 32);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "label2";
+            // 
+            // btnCreateCase
+            // 
+            this.btnCreateCase.Location = new System.Drawing.Point(241, 150);
+            this.btnCreateCase.Name = "btnCreateCase";
+            this.btnCreateCase.Size = new System.Drawing.Size(132, 23);
+            this.btnCreateCase.TabIndex = 2;
+            this.btnCreateCase.Text = "Create Case";
+            this.btnCreateCase.UseVisualStyleBackColor = true;
+            this.btnCreateCase.Click += new System.EventHandler(this.btnCreateCase_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(22, 125);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(93, 16);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Case Number:";
+            // 
+            // txtCaseNumber
+            // 
+            this.txtCaseNumber.Location = new System.Drawing.Point(121, 122);
+            this.txtCaseNumber.Name = "txtCaseNumber";
+            this.txtCaseNumber.Size = new System.Drawing.Size(252, 22);
+            this.txtCaseNumber.TabIndex = 0;
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.unassignedCasesControl1);
@@ -80,6 +118,14 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Unassigned Cases";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // unassignedCasesControl1
+            // 
+            this.unassignedCasesControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.unassignedCasesControl1.Location = new System.Drawing.Point(3, 3);
+            this.unassignedCasesControl1.Name = "unassignedCasesControl1";
+            this.unassignedCasesControl1.Size = new System.Drawing.Size(1045, 547);
+            this.unassignedCasesControl1.TabIndex = 0;
             // 
             // tabPage3
             // 
@@ -99,49 +145,15 @@
             this.tabPage4.Text = "Closed Cases";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // txtCaseNumber
+            // button1
             // 
-            this.txtCaseNumber.Location = new System.Drawing.Point(121, 122);
-            this.txtCaseNumber.Name = "txtCaseNumber";
-            this.txtCaseNumber.Size = new System.Drawing.Size(252, 22);
-            this.txtCaseNumber.TabIndex = 0;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(22, 125);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(93, 16);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Case Number:";
-            // 
-            // btnCreateCase
-            // 
-            this.btnCreateCase.Location = new System.Drawing.Point(241, 150);
-            this.btnCreateCase.Name = "btnCreateCase";
-            this.btnCreateCase.Size = new System.Drawing.Size(132, 23);
-            this.btnCreateCase.TabIndex = 2;
-            this.btnCreateCase.Text = "Create Case";
-            this.btnCreateCase.UseVisualStyleBackColor = true;
-            this.btnCreateCase.Click += new System.EventHandler(this.btnCreateCase_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(19, 42);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(92, 32);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "label2";
-            // 
-            // unassignedCasesControl1
-            // 
-            this.unassignedCasesControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.unassignedCasesControl1.Location = new System.Drawing.Point(3, 3);
-            this.unassignedCasesControl1.Name = "unassignedCasesControl1";
-            this.unassignedCasesControl1.Size = new System.Drawing.Size(1045, 547);
-            this.unassignedCasesControl1.TabIndex = 0;
+            this.button1.Location = new System.Drawing.Point(634, 306);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(160, 23);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "Open another form";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // MainForm
             // 
@@ -172,5 +184,6 @@
         private System.Windows.Forms.TextBox txtCaseNumber;
         private System.Windows.Forms.Label label2;
         private UnassignedCasesControl unassignedCasesControl1;
+        private System.Windows.Forms.Button button1;
     }
 }

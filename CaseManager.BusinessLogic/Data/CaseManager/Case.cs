@@ -33,6 +33,7 @@ namespace CaseManager.BusinessLogic.Data.CaseManager
         public string ManagerUsername { get; set; }
         public string TeamLeaderUsername { get; set; }
         public string TeamAssistantUsername { get; set; }
+        public bool IsAwaitingReassignment { get; set; }
     
         public virtual CaseStatus CaseStatus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

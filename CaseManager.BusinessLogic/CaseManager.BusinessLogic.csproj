@@ -135,9 +135,11 @@
       <DependentUpon>CaseManagerData.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\HR\HRDbContextPart.cs" />
+    <Compile Include="Domain\Dtos\CaseDto.cs" />
     <Compile Include="Domain\Enums\CaseStatusOption.cs" />
     <Compile Include="Domain\Enums\ConflictOfInterestStaffDesignationLevel.cs" />
     <Compile Include="Domain\Enums\DepartmentOption.cs" />
+    <Compile Include="Domain\Enums\DesignationOption.cs" />
     <Compile Include="Domain\Enums\PermissionOption.cs" />
     <Compile Include="Domain\Exceptions\CaseNotInApprovedStatusException.cs" />
     <Compile Include="Domain\Exceptions\ConfictOfInterestDeclarationException.cs" />

@@ -14,7 +14,7 @@ namespace CaseManager.Infrastructure.Notification
             _caseManagerDbContextFactory = caseManagerDbContextFactory;
         }
 
-        public void Notify(string sender, string message, IEnumerable<string> recepientList, IEnumerable<string> ccList)
+        public void Notify(string message, IEnumerable<string> recepientList, IEnumerable<string> ccList)
         {
             using (var dbContext = _caseManagerDbContextFactory.Create())
             {
@@ -23,7 +23,7 @@ namespace CaseManager.Infrastructure.Notification
                     CCList = ccList == null ? null : string.Join(",", ccList),
                     RecipientList = recepientList == null ? null : string.Join(",", recepientList),
                     Message = message,
-                    Sender = sender,
+                    Sender = "notification@email.com",
                 });
 
                 dbContext.SaveChanges();

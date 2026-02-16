@@ -32,11 +32,15 @@ namespace CaseManager.WinForms
             {
                 CaseNumber = txtCaseNumber.Text,
             };
-
             await Task.Run(() => _caseService.CreateCase(@case));
 
             await unassignedCasesControl1.LoadCases();
             MessageBox.Show("Case created successfully.");
+        }
+
+        private void button1_Click(object sender, System.EventArgs e)
+        {
+            FormFactory.CreateAnotherForm("This is a message.").Show();
         }
     }
 }

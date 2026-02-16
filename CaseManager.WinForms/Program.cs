@@ -59,6 +59,7 @@ namespace CaseManager.WinForms
         {
             builder.RegisterType<LoginForm>();
             builder.RegisterType<MainForm>();
+            builder.RegisterType<AnotherForm>();
         }
     }
 }

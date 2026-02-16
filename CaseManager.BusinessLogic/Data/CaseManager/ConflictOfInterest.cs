@@ -18,7 +18,8 @@ namespace CaseManager.BusinessLogic.Data.CaseManager
         public string Username { get; set; }
         public int CaseId { get; set; }
         public System.DateTime DeclaredDate { get; set; }
-        public int StaffDesignationLevel { get; set; }
+        public int StaffDesignationId { get; set; }
+        public bool IsReassignmentPending { get; set; }
     
         public virtual Case Case { get; set; }
     }

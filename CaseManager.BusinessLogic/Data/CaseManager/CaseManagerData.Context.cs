@@ -35,8 +35,8 @@ namespace CaseManager.BusinessLogic.Data.CaseManager
         public virtual DbSet<CaseStatus> CaseStatuses { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
         public virtual DbSet<TeamMember> TeamMembers { get; set; }
-        public virtual DbSet<ConflictOfInterest> ConflictOfInterests { get; set; }
         public virtual DbSet<Email> Emails { get; set; }
         public virtual DbSet<Log> Logs { get; set; }
+        public virtual DbSet<ConflictOfInterest> ConflictOfInterests { get; set; }
     }
 }

@@ -69,7 +69,6 @@ namespace CaseManager.BusinessLogic.Domain.Services
             _logger.LogEvent($"Case (Id: {caseId}) approved.");
 
             _notificationService.Notify(
-                _userContext.Username,
                 "The case was approved",
                 new string[] { @case.CreatedBy },
                 null);
@@ -80,26 +79,27 @@ namespace CaseManager.BusinessLogic.Domain.Services
             using (var dbContext = _caseManagerDbContextFactory.Create())
             {
                 IQueryable<Case> unassignedCasesQuery = dbContext.Cases
+                    .Include(@case => @case.CaseStatus)
                     .Where(@case => @case.StatusId == (int)CaseStatusOption.Proposed
                         || @case.StatusId == (int)CaseStatusOption.Approved);
 
-                bool canUserViewAllCasesInTheirDepartment =
+                bool canViewAllCasesInTheDepartment =
                     _userContext.HasPermission((int)PermissionOption.ViewAllUnassignedCasesInDepartment);
 
-                if (canUserViewAllCasesInTheirDepartment)
+                if (canViewAllCasesInTheDepartment)
                 {
                     // Filter by department of user.
-                    return unassignedCasesQuery
-                        .Where(@case => @case.DepartmentId == _userContext.DepartmentId)
-                        .ToList();
+                    unassignedCasesQuery = unassignedCasesQuery
+                        .Where(@case => @case.DepartmentId == _userContext.DepartmentId);
                 }
                 else
                 {
                     // Filter by created by user.
-                    return unassignedCasesQuery
-                        .Where(@case => @case.CreatedBy == _userContext.Username)
-                        .ToList();
+                    unassignedCasesQuery = unassignedCasesQuery
+                        .Where(@case => @case.CreatedBy == _userContext.Username);
                 }
+
+                return unassignedCasesQuery.ToList();
             }
         }
 
@@ -127,7 +127,6 @@ namespace CaseManager.BusinessLogic.Domain.Services
             _logger.LogEvent($"Case (Id: {@case.Id}) rejected.");
 
             _notificationService.Notify(
-                _userContext.Username,
                 "The case was rejected",
                 new string[] { @case.CreatedBy },
                 null);
@@ -168,7 +167,6 @@ namespace CaseManager.BusinessLogic.Domain.Services
             _logger.LogEvent($"Case (Id: {@case.Id}) assigned.");
 
             _notificationService.Notify(
-                _userContext.Username,
                 "The case was assigned",
                 new string[] { @case.TeamLeaderUsername },
                 new string[] { @case.ManagerUsername, @case.TeamAssistantUsername, @case.DirectorUsername });

@@ -227,7 +227,6 @@ namespace CaseManager.Tests
 
             _mockNotificationService.Verify(x =>
                 x.Notify(
-                    "testDefaultCurrentUser",
                     It.IsAny<string>(),
                     CollectionMatcher(new string[] { "someUser" }),
                     It.Is<IEnumerable<string>>(list => list == null || !list.Any())));
@@ -479,7 +478,6 @@ namespace CaseManager.Tests
             // Assert.
             _mockNotificationService.Verify(x => 
                 x.Notify(
-                    "testDefaultCurrentUser", 
                     It.IsAny<string>(), 
                     CollectionMatcher(new string[] { "userWithPermission" }),
                     It.Is<IEnumerable<string>>(list => list == null || !list.Any())));

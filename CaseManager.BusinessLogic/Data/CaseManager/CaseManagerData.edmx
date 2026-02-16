@@ -92,15 +92,16 @@
           <Property Name="CaseNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="StatusId" Type="int" Nullable="false" />
           <Property Name="DepartmentId" Type="int" Nullable="false" />
+          <Property Name="DirectorUsername" Type="varchar" MaxLength="50" />
+          <Property Name="ManagerUsername" Type="varchar" MaxLength="50" />
+          <Property Name="TeamLeaderUsername" Type="varchar" MaxLength="50" />
+          <Property Name="TeamAssistantUsername" Type="varchar" MaxLength="50" />
+          <Property Name="IsAwaitingReassignment" Type="bit" Nullable="false" />
           <Property Name="CreatedBy" Type="nvarchar(max)" Nullable="false" />
           <Property Name="CreatedAt" Type="datetime" Nullable="false" />
           <Property Name="UpdatedBy" Type="nvarchar(max)" Nullable="false" />
           <Property Name="UpdatedAt" Type="datetime" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
-          <Property Name="DirectorUsername" Type="varchar" MaxLength="50" />
-          <Property Name="ManagerUsername" Type="varchar" MaxLength="50" />
-          <Property Name="TeamLeaderUsername" Type="varchar" MaxLength="50" />
-          <Property Name="TeamAssistantUsername" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="CaseStatuses">
           <Key>
@@ -117,7 +118,8 @@
           <Property Name="Username" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="CaseId" Type="int" Nullable="false" />
           <Property Name="DeclaredDate" Type="datetime" Nullable="false" />
-          <Property Name="StaffDesignationLevel" Type="int" Nullable="false" />
+          <Property Name="StaffDesignationId" Type="int" Nullable="false" />
+          <Property Name="IsReassignmentPending" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="TeamMembers">
           <Key>
@@ -408,13 +410,13 @@
             <End Role="Team" EntitySet="Teams" />
             <End Role="TeamMember" EntitySet="TeamMembers" />
           </AssociationSet>
+          <EntitySet Name="Emails" EntityType="CaseManagerModel.Email" />
+          <EntitySet Name="Logs" EntityType="CaseManagerModel.Log" />
           <EntitySet Name="ConflictOfInterests" EntityType="CaseManagerModel.ConflictOfInterest" />
           <AssociationSet Name="FK_ConflictOfInterests_Cases" Association="CaseManagerModel.FK_ConflictOfInterests_Cases">
             <End Role="Case" EntitySet="Cases" />
             <End Role="ConflictOfInterest" EntitySet="ConflictOfInterests" />
           </AssociationSet>
-          <EntitySet Name="Emails" EntityType="CaseManagerModel.Email" />
-          <EntitySet Name="Logs" EntityType="CaseManagerModel.Log" />
         </EntityContainer>
         <EntityType Name="Permission">
           <Key>
@@ -520,6 +522,7 @@
           <Property Name="TeamLeaderUsername" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="TeamAssistantUsername" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="ConflictOfInterests" Relationship="CaseManagerModel.FK_ConflictOfInterests_Cases" FromRole="Case" ToRole="ConflictOfInterest" />
+          <Property Name="IsAwaitingReassignment" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="CaseStatus">
           <Key>
@@ -572,29 +575,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="ConflictOfInterest">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CaseId" Type="Int32" Nullable="false" />
-          <Property Name="DeclaredDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="StaffDesignationLevel" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Case" Relationship="CaseManagerModel.FK_ConflictOfInterests_Cases" FromRole="ConflictOfInterest" ToRole="Case" />
-        </EntityType>
-        <Association Name="FK_ConflictOfInterests_Cases">
-          <End Type="CaseManagerModel.Case" Role="Case" Multiplicity="1" />
-          <End Type="CaseManagerModel.ConflictOfInterest" Role="ConflictOfInterest" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Case">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ConflictOfInterest">
-              <PropertyRef Name="CaseId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="Email">
           <Key>
             <PropertyRef Name="Id" />
@@ -613,6 +593,30 @@
           <Property Name="Message" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
+        <EntityType Name="ConflictOfInterest">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CaseId" Type="Int32" Nullable="false" />
+          <Property Name="DeclaredDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="StaffDesignationId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Case" Relationship="CaseManagerModel.FK_ConflictOfInterests_Cases" FromRole="ConflictOfInterest" ToRole="Case" />
+          <Property Name="IsReassignmentPending" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_ConflictOfInterests_Cases">
+          <End Type="CaseManagerModel.Case" Role="Case" Multiplicity="1" />
+          <End Type="CaseManagerModel.ConflictOfInterest" Role="ConflictOfInterest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Case">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ConflictOfInterest">
+              <PropertyRef Name="CaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -705,6 +709,7 @@
           <EntitySetMapping Name="Cases">
             <EntityTypeMapping TypeName="CaseManagerModel.Case">
               <MappingFragment StoreEntitySet="Cases">
+                <ScalarProperty Name="IsAwaitingReassignment" ColumnName="IsAwaitingReassignment" />
                 <ScalarProperty Name="TeamAssistantUsername" ColumnName="TeamAssistantUsername" />
                 <ScalarProperty Name="TeamLeaderUsername" ColumnName="TeamLeaderUsername" />
                 <ScalarProperty Name="ManagerUsername" ColumnName="ManagerUsername" />
@@ -747,17 +752,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ConflictOfInterests">
-            <EntityTypeMapping TypeName="CaseManagerModel.ConflictOfInterest">
-              <MappingFragment StoreEntitySet="ConflictOfInterests">
-                <ScalarProperty Name="StaffDesignationLevel" ColumnName="StaffDesignationLevel" />
-                <ScalarProperty Name="DeclaredDate" ColumnName="DeclaredDate" />
-                <ScalarProperty Name="CaseId" ColumnName="CaseId" />
-                <ScalarProperty Name="Username" ColumnName="Username" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Emails">
             <EntityTypeMapping TypeName="CaseManagerModel.Email">
               <MappingFragment StoreEntitySet="Emails">
@@ -774,6 +768,18 @@
               <MappingFragment StoreEntitySet="Logs">
                 <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
                 <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ConflictOfInterests">
+            <EntityTypeMapping TypeName="CaseManagerModel.ConflictOfInterest">
+              <MappingFragment StoreEntitySet="ConflictOfInterests">
+                <ScalarProperty Name="IsReassignmentPending" ColumnName="IsReassignmentPending" />
+                <ScalarProperty Name="StaffDesignationId" ColumnName="StaffDesignationId" />
+                <ScalarProperty Name="DeclaredDate" ColumnName="DeclaredDate" />
+                <ScalarProperty Name="CaseId" ColumnName="CaseId" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
