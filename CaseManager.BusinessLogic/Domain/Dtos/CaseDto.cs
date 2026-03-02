@@ -1,6 +1,9 @@
-﻿namespace CaseManager.BusinessLogic.Domain.Dtos
+﻿using CaseManager.BusinessLogic.Data.CaseManager;
+
+namespace CaseManager.BusinessLogic.Domain.Dtos
 {
-    internal class CaseDto
+    public class CaseDto : Case
     {
+        public string DepartmentName { get; set; }
     }
 }

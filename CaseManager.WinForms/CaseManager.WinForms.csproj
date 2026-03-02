@@ -102,6 +102,12 @@
     <Compile Include="AnotherForm.Designer.cs">
       <DependentUpon>AnotherForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AssignCaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AssignCaseForm.Designer.cs">
+      <DependentUpon>AssignCaseForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormFactory.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
@@ -126,6 +132,9 @@
     <Compile Include="ViewModels\CaseViewModel.cs" />
     <EmbeddedResource Include="AnotherForm.resx">
       <DependentUpon>AnotherForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AssignCaseForm.resx">
+      <DependentUpon>AssignCaseForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>

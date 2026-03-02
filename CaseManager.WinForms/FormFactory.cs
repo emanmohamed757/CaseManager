@@ -1,4 +1,7 @@
 ﻿using Autofac;
+using CaseManager.BusinessLogic.Authorization;
+using CaseManager.BusinessLogic.Data.CaseManager;
+using CaseManager.BusinessLogic.Domain.Services;
 using System;
 using System.Windows.Forms;
 
@@ -35,6 +38,17 @@ namespace CaseManager.WinForms
 
             var form = _container.Resolve<AnotherForm>(
                 new TypedParameter(typeof(string), message));
+
+            form.FormClosed += (_, __) => scope.Dispose();
+            return form;
+        }
+
+        public static AssignCaseForm CreateAssignCaseForm(Case @case)
+        {
+            ILifetimeScope scope = _container.BeginLifetimeScope();
+
+            var form = _container.Resolve<AssignCaseForm>(
+                new TypedParameter(typeof(Case), @case));
 
             form.FormClosed += (_, __) => scope.Dispose();
             return form;

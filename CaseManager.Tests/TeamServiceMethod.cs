@@ -1,5 +1,6 @@
 ﻿using CaseManager.BusinessLogic.Authorization;
 using CaseManager.BusinessLogic.Data.CaseManager;
+using CaseManager.BusinessLogic.Data.HR;
 using CaseManager.BusinessLogic.Domain.Enums;
 using CaseManager.BusinessLogic.Domain.Services;
 using CaseManager.BusinessLogic.Interfaces.Notification;
@@ -43,7 +44,16 @@ namespace CaseManager.Tests
                 return new CaseManagerDbContext(connection);
             });
 
-            _teamService = new TeamService(mockCaseManagerDbContextFactory.Object, _mockUserContext.Object);
+
+            var hrDataLoader = new EntityDataLoader("name=HRDbContext");
+            DbConnection hrConnection = Effort.EntityConnectionFactory.CreateTransient("name=HRDbContext", hrDataLoader);
+            var mockHRDbContextFactory = new Mock<IDbContextFactory<HRDbContext>>();
+            mockHRDbContextFactory.Setup(x => x.Create()).Returns(() =>
+            {
+                return new HRDbContext(hrConnection);
+            });
+
+            _teamService = new TeamService(mockCaseManagerDbContextFactory.Object, mockHRDbContextFactory.Object);
         }
 
         public void Dispose()
@@ -52,14 +62,14 @@ namespace CaseManager.Tests
             _assertCaseManagerDbContext.Dispose();
         }
 
-        //[Fact]
+        [Fact]
         public void GetImmediateSubordinates_ReturnsOnlyThoseWhoAreInTheTeamAssignedToYou()
         {
             // Arrange.
             Team yourTeam = new Team
             {
                 DepartmentId = (int)DepartmentOption.Audit1,
-                SupervisorUsername = "testDefaultCurrentUser",
+                SupervisorUsername = _mockUserContext.Object.Username,
                 TeamMembers = new List<TeamMember>
                 {
                     new TeamMember
@@ -98,7 +108,7 @@ namespace CaseManager.Tests
             _arrangeCaseManagerDbContext.Teams.Add(anotherTeam);
             _arrangeCaseManagerDbContext.SaveChanges();
 
-            List<string> subordinates = _teamService.GetImmediateSubordinates();
+            List<string> subordinates = _teamService.GetImmediateSubordinates(_mockUserContext.Object.Username);
 
             Assert.Contains("member1", subordinates);
             Assert.Contains("member2", subordinates);

@@ -14,13 +14,13 @@ namespace CaseManager.WinForms.ViewModels
         [Browsable(false)]
         public int StatusId { get; set; }
 
-        [DisplayName("Status Name")]
+        [DisplayName("Status")]
         public string StatusName { get; set; }
 
         [Browsable(false)]
         public int DepartmentId { get; set; }
 
-        [DisplayName("Department Name")]
+        [DisplayName("Department")]
         public string DepartmentName { get; set; }
 
         [DisplayName("Created By")]
@@ -38,12 +38,16 @@ namespace CaseManager.WinForms.ViewModels
         [Browsable(false)]
         public bool IsDeleted { get; set; }
 
-        public string DirectorUsername { get; set; }
+        //[DisplayName("Director")]
+        //public string DirectorUsername { get; set; }
 
-        public string ManagerUsername { get; set; }
+        //[DisplayName("Manager")]
+        //public string ManagerUsername { get; set; }
 
-        public string TeamLeaderUsername { get; set; }
+        //[DisplayName("Team Leader")]
+        //public string TeamLeaderUsername { get; set; }
 
-        public string TeamAssistantUsername { get; set; }
+        //[DisplayName("Team Assistant")]
+        //public string TeamAssistantUsername { get; set; }
     }
 }

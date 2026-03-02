@@ -7,6 +7,7 @@ using CaseManager.BusinessLogic.Domain.Services;
 using CaseManager.BusinessLogic.Interfaces.Notification;
 using CaseManager.Infrastructure.Notification;
 using Serilog;
+using Serilog.Context;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
@@ -29,6 +30,7 @@ namespace CaseManager.WinForms
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
+                .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .WriteTo.Seq("http://localhost:5341/")
                 .CreateLogger();
@@ -38,11 +40,15 @@ namespace CaseManager.WinForms
             RegisterForms(builder);
             var container = builder.Build();
 
+            var userContext = container.Resolve<UserContext>();
+            LogContext.PushProperty("UserContext", userContext, true);
+
             FormFactory.SetContainer(container);
 
             LoginForm loginForm = FormFactory.Create<LoginForm>();
             if (loginForm.ShowDialog() == DialogResult.OK)
             {
+
                 Application.Run(FormFactory.Create<MainForm>());
             }
         }
@@ -53,6 +59,8 @@ namespace CaseManager.WinForms
             builder.RegisterType<UserContext>().AsSelf().SingleInstance();
             builder.RegisterType<AuthorizationService>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<CaseService>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<HRService>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<TeamService>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<NextStatusService>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<DbContextFactory<HRDbContext>>().As<IDbContextFactory<HRDbContext>>().InstancePerLifetimeScope();
             builder.RegisterType<DbContextFactory<CaseManagerDbContext>>().As<IDbContextFactory<CaseManagerDbContext>>().InstancePerLifetimeScope();
@@ -64,6 +72,7 @@ namespace CaseManager.WinForms
             builder.RegisterType<LoginForm>();
             builder.RegisterType<MainForm>();
             builder.RegisterType<AnotherForm>();
+            builder.RegisterType<AssignCaseForm>();
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using CaseManager.BusinessLogic.Authorization;
 using CaseManager.BusinessLogic.Data.CaseManager;
+using CaseManager.BusinessLogic.Data.HR;
+using CaseManager.BusinessLogic.Domain.Dtos;
 using CaseManager.BusinessLogic.Domain.Enums;
 using CaseManager.BusinessLogic.Domain.Exceptions;
 using CaseManager.BusinessLogic.Domain.Services;
@@ -34,6 +36,11 @@ namespace CaseManager.Tests
         public CaseServiceShould()
         {
             _mockLogger = new Mock<ILogger>();
+            _mockLogger.Setup(x => x.ForContext(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()))
+                .Returns(_mockLogger.Object);
+            _mockLogger.Setup(x => x.ForContext<CaseService>())
+                .Returns(_mockLogger.Object);
+
             _mockNotificationService = new Mock<INotificationService>();
             _mockUserContext = new Mock<UserContext>();
             _mockUserContext.SetupAllProperties();
@@ -53,7 +60,21 @@ namespace CaseManager.Tests
                 return new CaseManagerDbContext(connection);
             });
 
+
+            var hrDataLoader = new EntityDataLoader("name=HRDbContext");
+            DbConnection hrConnection = Effort.EntityConnectionFactory.CreateTransient("name=HRDbContext", hrDataLoader);
+            var mockHRDbContextFactory = new Mock<IDbContextFactory<HRDbContext>>();
+            mockHRDbContextFactory.Setup(x => x.Create()).Returns(() =>
+            {
+                return new HRDbContext(hrConnection);
+            });
+
             var nextStatusService = new NextStatusService();
+
+            var hrService = new HRService(
+                _mockUserContext.Object,
+                _mockLogger.Object,
+                mockHRDbContextFactory.Object);
 
             // This is the system under test.
             _caseService = new CaseService(
@@ -61,7 +82,9 @@ namespace CaseManager.Tests
                 _mockUserContext.Object,
                 _mockLogger.Object,
                 _mockNotificationService.Object,
-                nextStatusService);
+                nextStatusService,
+                mockHRDbContextFactory.Object,
+                hrService);
         }
 
         public void Dispose()
@@ -279,6 +302,7 @@ namespace CaseManager.Tests
             {
                 CaseNumber = "dawdaw",
                 StatusId = (int)CaseStatusOption.Proposed,
+                DepartmentId = (int)DepartmentOption.Audit1,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
                 CreatedBy = createdBy,
@@ -290,7 +314,7 @@ namespace CaseManager.Tests
             _arrangeCaseManagerDbContext.SaveChanges();
 
             // Act.
-            List<Case> cases = _caseService.GetUnassignedCases();
+            List<CaseDto> cases = _caseService.GetUnassignedCases();
 
             // Assert.
             Assert.Equal(cases.Any(), isCaseReturned);
@@ -302,6 +326,7 @@ namespace CaseManager.Tests
             // Arrange. 
             // Set test user.
             _mockUserContext.Object.Username = "userWithPermission";
+            _mockUserContext.Object.DepartmentId = (int)DepartmentOption.Audit1;
             _mockUserContext.Object.EffectivePermissions = new List<Permission>
             {
                 _arrangeCaseManagerDbContext.Permissions
@@ -313,6 +338,7 @@ namespace CaseManager.Tests
             {
                 CaseNumber = "dawdaw",
                 StatusId = (int)CaseStatusOption.Proposed,
+                DepartmentId = (int)DepartmentOption.Audit1,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
                 CreatedBy = "userWithPermission",
@@ -323,6 +349,7 @@ namespace CaseManager.Tests
             {
                 CaseNumber = "dawdaw",
                 StatusId = (int)CaseStatusOption.Approved,
+                DepartmentId = (int)DepartmentOption.Audit1,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
                 CreatedBy = "userWithPermission",
@@ -333,6 +360,7 @@ namespace CaseManager.Tests
             {
                 CaseNumber = "dawdaw",
                 StatusId = (int)CaseStatusOption.Proposed,
+                DepartmentId = (int)DepartmentOption.Audit1,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
                 CreatedBy = "anotherUser",
@@ -345,7 +373,7 @@ namespace CaseManager.Tests
             _arrangeCaseManagerDbContext.SaveChanges();
 
             // Act.
-            List<Case> cases = _caseService.GetUnassignedCases();
+            List<CaseDto> cases = _caseService.GetUnassignedCases();
 
             // Assert.
             Assert.Contains(cases, @case => @case.Id == case1.Id);
@@ -406,7 +434,7 @@ namespace CaseManager.Tests
             _arrangeCaseManagerDbContext.SaveChanges();
 
             // Act.
-            List<Case> cases = _caseService.GetUnassignedCases();
+            List<CaseDto> cases = _caseService.GetUnassignedCases();
 
             // Assert.
             Assert.DoesNotContain(case1, cases);
@@ -447,7 +475,7 @@ namespace CaseManager.Tests
             _arrangeCaseManagerDbContext.SaveChanges();
 
             // Act.
-            List<Case> cases = _caseService.GetUnassignedCases();
+            List<CaseDto> cases = _caseService.GetUnassignedCases();
 
             // Assert.
             Assert.Equal(cases.Any(), doesReturnCase);
@@ -656,6 +684,26 @@ namespace CaseManager.Tests
             _arrangeCaseManagerDbContext.SaveChanges();
 
             return @case;
+        }
+
+        [Fact]
+        public void AssignCase_ReturnsTheNamesOfAssignees()
+        {
+            // Arrange.
+            string managerUsername = "manager";
+            Case @case = AssignCaseArrange(managerUsername, "member1", "member2");
+
+            // Act.
+            CaseAssignmentResponse response = _caseService.AssignCase(
+                @case.Id,
+                _mockUserContext.Object.Username,
+                managerUsername);
+
+            // Assert.
+            Assert.Equal(_mockUserContext.Object.Username, response.DirectorUsername);
+            Assert.Equal(managerUsername, response.ManagerUsername);
+            Assert.Equal("member1", response.TeamLeaderUsername);
+            Assert.Equal("member2", response.TeamAssistantUsername);
         }
         #endregion
 

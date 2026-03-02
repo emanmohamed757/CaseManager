@@ -9,13 +9,14 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity;
 using System.Linq;
 using Serilog;
+using CaseManager.BusinessLogic.Data.HR;
+using CaseManager.BusinessLogic.Domain.Dtos;
 
 namespace CaseManager.BusinessLogic.Domain.Services
 {
     public class CaseService
     {
         private readonly IDbContextFactory<CaseManagerDbContext> _caseManagerDbContextFactory;
-
 
         private readonly UserContext _userContext;
 
@@ -25,18 +26,28 @@ namespace CaseManager.BusinessLogic.Domain.Services
 
         private readonly NextStatusService _nextStatusService;
 
+        private readonly IDbContextFactory<HRDbContext> _hrDbContextFactory;
+
+        private readonly HRService _hrService;
+
+        private readonly TeamService _teamService;
+
         public CaseService(
             IDbContextFactory<CaseManagerDbContext> caseManagerDbContextFactory,
             UserContext userContext,
             ILogger logger,
             INotificationService notificationService,
-            NextStatusService nextStatusService)
+            NextStatusService nextStatusService,
+            IDbContextFactory<HRDbContext> hrDbContextFactory,
+            HRService hrService)
         {
             _caseManagerDbContextFactory = caseManagerDbContextFactory;
             _userContext = userContext;
             _logger = logger.ForContext<CaseService>();
             _notificationService = notificationService;
             _nextStatusService = nextStatusService;
+            _hrDbContextFactory = hrDbContextFactory;
+            _hrService = hrService;
         }
 
         // TODO: Should the presentation layer pass a DTO instead of the data/domain model itself? For now I am passing the data/domain model. Btw, is it "data" or "domain" model?
@@ -75,35 +86,66 @@ namespace CaseManager.BusinessLogic.Domain.Services
                 null);
         }
 
-        public List<Case> GetUnassignedCases()
+        public List<CaseDto> GetUnassignedCases()
         {
             using (var dbContext = _caseManagerDbContextFactory.Create())
             {
-                IQueryable<Case> unassignedCasesQuery = dbContext.Cases
+                IQueryable<Case> query = dbContext.Cases
                     .Include(@case => @case.CaseStatus)
                     .Where(@case => @case.StatusId == (int)CaseStatusOption.Proposed
                         || @case.StatusId == (int)CaseStatusOption.Approved);
-
+                #region log
                 _logger.Verbose("Checking whether user has permission to ViewAllCasesInTheDepartment.");
+                #endregion
                 bool canViewAllCasesInTheDepartment =
                     _userContext.HasPermission((int)PermissionOption.ViewAllUnassignedCasesInDepartment);
 
                 if (canViewAllCasesInTheDepartment)
                 {
+                    #region log
                     _logger.Verbose("User has permission to ViewAllCasesInTheDepartment.");
+                    #endregion
                     // Filter by department of user.
-                    unassignedCasesQuery = unassignedCasesQuery
+                    query = query
                         .Where(@case => @case.DepartmentId == _userContext.DepartmentId);
                 }
                 else
                 {
+                    #region log
                     _logger.Verbose("User does not have permission to ViewAllCasesInTheDepartment.");
+                    #endregion
                     // Filter by created by user.
-                    unassignedCasesQuery = unassignedCasesQuery
+                    query = query
                         .Where(@case => @case.CreatedBy == _userContext.Username);
                 }
 
-                return unassignedCasesQuery.ToList();
+                List<Case> unassignedCases = query.ToList();
+
+                // Map to DTO.
+                List<Department> departments = _hrService.GetDepartments();
+                return unassignedCases
+                    .Select(@case => new CaseDto
+                    {
+                        Id = @case.Id,
+                        CaseNumber = @case.CaseNumber,
+                        StatusId = @case.StatusId,
+                        DepartmentId = @case.DepartmentId,
+                        CreatedBy = @case.CreatedBy,
+                        CreatedAt = @case.CreatedAt,
+                        UpdatedBy = @case.UpdatedBy,
+                        UpdatedAt = @case.UpdatedAt,
+                        IsDeleted = @case.IsDeleted,
+                        DirectorUsername = @case.DirectorUsername,
+                        ManagerUsername = @case.ManagerUsername,
+                        TeamLeaderUsername = @case.TeamLeaderUsername,
+                        TeamAssistantUsername = @case.TeamAssistantUsername,
+                        IsAwaitingReassignment = @case.IsAwaitingReassignment,
+                        CaseStatus = @case.CaseStatus,
+                        ConflictOfInterests = @case.ConflictOfInterests,
+                        DepartmentName = departments
+                            .FirstOrDefault(d => d.Id == @case.DepartmentId).Name
+                    })
+                    .ToList();
             }
         }
 
@@ -136,7 +178,11 @@ namespace CaseManager.BusinessLogic.Domain.Services
                 null);
         }
 
-        public void AssignCase(int caseId, string director, string manager)
+        /// <summary>
+        /// Assigns a case to a given director and manager and the team of that manager..
+        /// </summary>
+        /// <exception cref="CaseNotInApprovedStatusException"></exception>
+        public CaseAssignmentResponse AssignCase(int caseId, string director, string manager)
         {
             Case @case;
             using (var dbContext = _caseManagerDbContextFactory.Create())
@@ -149,7 +195,7 @@ namespace CaseManager.BusinessLogic.Domain.Services
                     throw new CaseNotInApprovedStatusException();
                 }
 
-                // Find team leader and team assistant of the team of the given manager.
+                // Find team leader and team assistant of the the given manager's team.
                 Team managerTeam = dbContext.Teams
                     .Include(team => team.TeamMembers)
                     .First(team => team.SupervisorUsername == manager);
@@ -174,6 +220,14 @@ namespace CaseManager.BusinessLogic.Domain.Services
                 "The case was assigned",
                 new string[] { @case.TeamLeaderUsername },
                 new string[] { @case.ManagerUsername, @case.TeamAssistantUsername, @case.DirectorUsername });
+
+            return new CaseAssignmentResponse
+            {
+                DirectorUsername = @case.DirectorUsername,
+                ManagerUsername = @case.ManagerUsername,
+                TeamLeaderUsername = @case.TeamLeaderUsername,
+                TeamAssistantUsername = @case.TeamAssistantUsername,
+            };
         }
 
         public List<Case> GetOngoingCases()
@@ -242,6 +296,14 @@ namespace CaseManager.BusinessLogic.Domain.Services
             using (var dbContext = _caseManagerDbContextFactory.Create())
             {
                 return dbContext.Cases.Where(@case => @case.StatusId == (int)CaseStatusOption.Closed).ToList();
+            }
+        }
+
+        public Case GetCase(string caseNumber)
+        {
+            using (var dbContext = _caseManagerDbContextFactory.Create())
+            {
+                return dbContext.Cases.FirstOrDefault(@case => @case.CaseNumber == caseNumber);
             }
         }
     }

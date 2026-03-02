@@ -1,5 +1,6 @@
 ﻿using CaseManager.BusinessLogic.Authorization;
 using Serilog;
+using Serilog.Context;
 using System.Windows.Forms;
 
 namespace CaseManager.WinForms
@@ -18,6 +19,7 @@ namespace CaseManager.WinForms
             _userContext = userContext;
             _authorizationService = authorizationService;
             _logger = logger.ForContext<LoginForm>();
+            textBox1.Text = "davidk_d3";
         }
 
         private void button1_Click(object sender, System.EventArgs e)
@@ -31,8 +33,6 @@ namespace CaseManager.WinForms
                 return;
             }
 
-            _logger.Information($"Username \"{username}\" was authorized");
-
             UserContext userInfo = _authorizationService.GetUserInfo(username);
 
             _userContext.Username = username;
@@ -40,8 +40,18 @@ namespace CaseManager.WinForms
             _userContext.Name = userInfo.Name;
             _userContext.EffectivePermissions = userInfo.EffectivePermissions;
 
+            _logger.Information($"Username \"{username}\" was authorized");
+
             DialogResult = DialogResult.OK;
             this.Close();
+        }
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                button1.PerformClick();
+            }
         }
     }
 }

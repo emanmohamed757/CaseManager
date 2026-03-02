@@ -29,33 +29,55 @@
         private void InitializeComponent()
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.unassignedCasesControl1 = new CaseManager.WinForms.UnassignedCasesControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.btnCreateCase = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.txtCaseNumber = new System.Windows.Forms.TextBox();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
-            this.unassignedCasesControl1 = new CaseManager.WinForms.UnassignedCasesControl();
             this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1059, 582);
+            this.tabControl1.Size = new System.Drawing.Size(794, 473);
             this.tabControl1.TabIndex = 0;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.unassignedCasesControl1);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage2.Size = new System.Drawing.Size(786, 447);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Unassigned Cases";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // unassignedCasesControl1
+            // 
+            this.unassignedCasesControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.unassignedCasesControl1.Location = new System.Drawing.Point(2, 2);
+            this.unassignedCasesControl1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.unassignedCasesControl1.Name = "unassignedCasesControl1";
+            this.unassignedCasesControl1.Size = new System.Drawing.Size(782, 443);
+            this.unassignedCasesControl1.TabIndex = 0;
             // 
             // tabPage1
             // 
@@ -64,19 +86,32 @@
             this.tabPage1.Controls.Add(this.btnCreateCase);
             this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Controls.Add(this.txtCaseNumber);
-            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1051, 553);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage1.Size = new System.Drawing.Size(786, 447);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Create Case";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(181, 196);
+            this.button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(99, 19);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "Open another form";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(19, 42);
+            this.label2.Location = new System.Drawing.Point(14, 34);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(92, 32);
             this.label2.TabIndex = 3;
@@ -84,9 +119,10 @@
             // 
             // btnCreateCase
             // 
-            this.btnCreateCase.Location = new System.Drawing.Point(241, 150);
+            this.btnCreateCase.Location = new System.Drawing.Point(181, 122);
+            this.btnCreateCase.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnCreateCase.Name = "btnCreateCase";
-            this.btnCreateCase.Size = new System.Drawing.Size(132, 23);
+            this.btnCreateCase.Size = new System.Drawing.Size(99, 19);
             this.btnCreateCase.TabIndex = 2;
             this.btnCreateCase.Text = "Create Case";
             this.btnCreateCase.UseVisualStyleBackColor = true;
@@ -95,79 +131,56 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(22, 125);
+            this.label1.Location = new System.Drawing.Point(16, 102);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(93, 16);
+            this.label1.Size = new System.Drawing.Size(86, 15);
             this.label1.TabIndex = 1;
             this.label1.Text = "Case Number:";
             // 
             // txtCaseNumber
             // 
-            this.txtCaseNumber.Location = new System.Drawing.Point(121, 122);
+            this.txtCaseNumber.Location = new System.Drawing.Point(91, 99);
+            this.txtCaseNumber.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtCaseNumber.Name = "txtCaseNumber";
-            this.txtCaseNumber.Size = new System.Drawing.Size(252, 22);
+            this.txtCaseNumber.Size = new System.Drawing.Size(190, 20);
             this.txtCaseNumber.TabIndex = 0;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.unassignedCasesControl1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 25);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1051, 553);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Unassigned Cases";
-            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // tabPage3
             // 
-            this.tabPage3.Location = new System.Drawing.Point(4, 25);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1051, 553);
+            this.tabPage3.Size = new System.Drawing.Size(786, 447);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Ongoing Cases";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // tabPage4
             // 
-            this.tabPage4.Location = new System.Drawing.Point(4, 25);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(1051, 553);
+            this.tabPage4.Size = new System.Drawing.Size(786, 447);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Closed Cases";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(241, 241);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(132, 23);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "Open another form";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // unassignedCasesControl1
-            // 
-            this.unassignedCasesControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.unassignedCasesControl1.Location = new System.Drawing.Point(3, 3);
-            this.unassignedCasesControl1.Name = "unassignedCasesControl1";
-            this.unassignedCasesControl1.Size = new System.Drawing.Size(1045, 547);
-            this.unassignedCasesControl1.TabIndex = 0;
-            // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1059, 582);
+            this.ClientSize = new System.Drawing.Size(794, 473);
             this.Controls.Add(this.tabControl1);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Case Manager";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.tabControl1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
