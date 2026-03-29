@@ -1,6 +1,6 @@
 ﻿namespace CaseManager.WinForms
 {
-    partial class UnassignedCasesControl
+    partial class UnassignedCasesPage
     {
         /// <summary> 
         /// Required designer variable.
@@ -39,20 +39,23 @@
             this.gvUnassignedCases.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gvUnassignedCases.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gvUnassignedCases.Location = new System.Drawing.Point(0, 0);
+            this.gvUnassignedCases.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.gvUnassignedCases.Name = "gvUnassignedCases";
             this.gvUnassignedCases.ReadOnly = true;
             this.gvUnassignedCases.RowHeadersWidth = 51;
             this.gvUnassignedCases.RowTemplate.Height = 24;
-            this.gvUnassignedCases.Size = new System.Drawing.Size(714, 477);
+            this.gvUnassignedCases.Size = new System.Drawing.Size(536, 388);
             this.gvUnassignedCases.TabIndex = 0;
+            this.gvUnassignedCases.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gvUnassignedCases_CellClick);
             // 
-            // UnassignedCasesControl
+            // UnassignedCasesPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.gvUnassignedCases);
-            this.Name = "UnassignedCasesControl";
-            this.Size = new System.Drawing.Size(714, 477);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Name = "UnassignedCasesPage";
+            this.Size = new System.Drawing.Size(536, 388);
             ((System.ComponentModel.ISupportInitialize)(this.gvUnassignedCases)).EndInit();
             this.ResumeLayout(false);
 

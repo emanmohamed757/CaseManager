@@ -30,7 +30,7 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.unassignedCasesControl1 = new CaseManager.WinForms.UnassignedCasesControl();
+            this.unassignedCasesControl1 = new CaseManager.WinForms.UnassignedCasesPage();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.button1 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -196,7 +196,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtCaseNumber;
         private System.Windows.Forms.Label label2;
-        private UnassignedCasesControl unassignedCasesControl1;
+        private UnassignedCasesPage unassignedCasesControl1;
         private System.Windows.Forms.Button button1;
     }
 }

@@ -282,6 +282,38 @@ namespace CaseManager.Tests
             // Assert.
             _mockLogger.Verify(x => x.Information(It.IsAny<string>()));
         }
+
+        [Theory]
+        [InlineData(CaseStatusOption.Approved)]
+        [InlineData(CaseStatusOption.OnHold)]
+        [InlineData(CaseStatusOption.Planning)]
+        [InlineData(CaseStatusOption.Closed)]
+        public void ApproveCase_DoesNotApproveACaseInTheWrongStatus(
+            CaseStatusOption status)
+        {
+            // Arrange.
+            // Add data for testing.
+            _arrangeCaseManagerDbContext.Cases.Add(new Case
+            {
+                CaseNumber = "2026/001 (Proposed Case)",
+                StatusId = (int)status,
+                CreatedAt = DateTime.Now,
+                CreatedBy = "eaman",
+                UpdatedAt = DateTime.Now,
+                UpdatedBy = "eaman",
+                IsDeleted = false
+            });
+            _arrangeCaseManagerDbContext.SaveChanges();
+
+            Case caseWithProposedStatus = _arrangeCaseManagerDbContext.Cases
+                .FirstOrDefault(c => c.StatusId == (int)status);
+
+            // Act.
+            Action action = () => _caseService.ApproveCase(caseWithProposedStatus.Id);
+
+            // Assert.
+            Assert.Throws<CaseNotInProposedStatusException>(action);
+        }
         #endregion
 
         #region GetUnassignedCases

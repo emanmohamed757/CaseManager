@@ -19,7 +19,7 @@ namespace CaseManager.WinForms
             _userContext = userContext;
             _authorizationService = authorizationService;
             _logger = logger.ForContext<LoginForm>();
-            textBox1.Text = "davidk_d3";
+            textBox1.Text = "mikael.berg_d2_dir";
         }
 
         private void button1_Click(object sender, System.EventArgs e)

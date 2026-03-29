@@ -18,7 +18,7 @@ namespace CaseManager.WinForms
 {
     public partial class AssignCaseForm : Form
     {
-        private readonly Case _case;
+        private readonly int _caseId;
 
         private readonly TeamService _teamService;
 
@@ -26,15 +26,13 @@ namespace CaseManager.WinForms
 
         private readonly UserContext _userContext;
 
-        public AssignCaseForm(Case @case, TeamService teamService, CaseService caseService, UserContext userContext)
+        public AssignCaseForm(int caseId, TeamService teamService, CaseService caseService, UserContext userContext)
         {
             InitializeComponent();
-            _case = @case;
+            _caseId = caseId;
             _teamService = teamService;
             _caseService = caseService;
             _userContext = userContext;
-
-            lblCaseNumber.Text = $"Assigning Case {@case.CaseNumber}";
         }
 
         private async void AssignCaseForm_Load(object sender, EventArgs e)
@@ -43,6 +41,9 @@ namespace CaseManager.WinForms
             ddManager.DisplayMember = nameof(Employee.Name);
             ddManager.ValueMember = nameof(Employee.Username);
             ddManager.DataSource = subordinates;
+
+            Case @case = await _caseService.GetCase(_caseId);
+            lblCaseNumber.Text = $"Assigning Case {@case.CaseNumber}";
         }
 
         private async void btnAssignCase_Click(object sender, EventArgs e)
@@ -54,7 +55,7 @@ namespace CaseManager.WinForms
             {
                 string manager = ddManager.SelectedValue.ToString();
                 response = await Task.Run(() =>
-                    _caseService.AssignCase(_case.Id, _userContext.Username, manager));
+                    _caseService.AssignCase(_caseId, _userContext.Username, manager));
             }
             catch (CaseNotInApprovedStatusException ex)
             {
@@ -63,7 +64,7 @@ namespace CaseManager.WinForms
                     "Assign Case",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
-                throw;
+                return;
             }
 
             Cursor = Cursors.Default;
@@ -77,6 +78,10 @@ namespace CaseManager.WinForms
                 "Assign Case",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
+
+            // Close the form.
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
     }
 }

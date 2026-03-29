@@ -165,6 +165,7 @@
     <Compile Include="Domain\Enums\DesignationOption.cs" />
     <Compile Include="Domain\Enums\PermissionOption.cs" />
     <Compile Include="Domain\Exceptions\CaseNotInApprovedStatusException.cs" />
+    <Compile Include="Domain\Exceptions\CaseNotInProposedStatusException.cs" />
     <Compile Include="Domain\Exceptions\ConfictOfInterestDeclarationException.cs" />
     <Compile Include="Domain\Exceptions\InvalidStatusException.cs" />
     <Compile Include="Domain\Services\ConflictOfInterestService.cs" />

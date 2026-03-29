@@ -11,6 +11,7 @@ using System.Linq;
 using Serilog;
 using CaseManager.BusinessLogic.Data.HR;
 using CaseManager.BusinessLogic.Domain.Dtos;
+using System.Threading.Tasks;
 
 namespace CaseManager.BusinessLogic.Domain.Services
 {
@@ -29,8 +30,6 @@ namespace CaseManager.BusinessLogic.Domain.Services
         private readonly IDbContextFactory<HRDbContext> _hrDbContextFactory;
 
         private readonly HRService _hrService;
-
-        private readonly TeamService _teamService;
 
         public CaseService(
             IDbContextFactory<CaseManagerDbContext> caseManagerDbContextFactory,
@@ -68,12 +67,22 @@ namespace CaseManager.BusinessLogic.Domain.Services
             _logger.Information("Case created.");
         }
 
+        /// <summary>
+        /// Changes the status of the case to approved.
+        /// </summary>
+        /// <exception cref="CaseNotInProposedStatusException"></exception>
         public void ApproveCase(int caseId)
         {
             Case @case;
             using (var dbContext = _caseManagerDbContextFactory.Create())
             {
                 @case = dbContext.Cases.Find(caseId);
+
+                if (@case.StatusId != (int)CaseStatusOption.Proposed)
+                {
+                    throw new CaseNotInProposedStatusException();
+                }
+
                 @case.StatusId = (int)CaseStatusOption.Approved;
                 dbContext.SaveChanges();
             }
@@ -187,21 +196,35 @@ namespace CaseManager.BusinessLogic.Domain.Services
             Case @case;
             using (var dbContext = _caseManagerDbContextFactory.Create())
             {
+                #region Log.Verbose
+                _logger.Verbose($"Searching for case with case Id {caseId}");
+                #endregion
                 @case = dbContext.Cases.Find(caseId);
+                #region Log.Debug
+                _logger.Debug($"Searched for and found case with case Id {caseId}");
+                #endregion
 
                 // Only allow approved cases to be assigned.
                 if (@case.StatusId != (int)CaseStatusOption.Approved)
                 {
-                    throw new CaseNotInApprovedStatusException();
+                    var exception = new CaseNotInApprovedStatusException();
+                    #region Log.Error
+                    _logger.Error(exception, exception.Message);
+                    #endregion
+                    throw exception;
                 }
 
-                // Find team leader and team assistant of the the given manager's team.
+                #region Log.Verbose
+                _logger.Verbose($"Finding team leader and team assistant.");
+                #endregion
+                // Find team leader and team assistant of the given manager's team.
                 Team managerTeam = dbContext.Teams
                     .Include(team => team.TeamMembers)
                     .First(team => team.SupervisorUsername == manager);
                 TeamMember teamLeader = managerTeam.TeamMembers.First(member => member.IsTeamLeader);
                 TeamMember teamAssistant = managerTeam.TeamMembers.First(member => !member.IsTeamLeader);
 
+                _logger.Verbose($"Setting case members");
                 // Set case members.
                 @case.DirectorUsername = director;
                 @case.ManagerUsername = manager;
@@ -210,24 +233,39 @@ namespace CaseManager.BusinessLogic.Domain.Services
 
                 // Change status.
                 @case.StatusId = (int)CaseStatusOption.Assigned;
+                #region Log.Debug
+                _logger.Debug($"Status of case (caseId: {@case.Id} was changed to {CaseStatusOption.Assigned}");
+                #endregion
 
                 dbContext.SaveChanges();
             }
 
+            #region Log Information
             _logger.Information($"Case (Id: {@case.Id}) assigned.");
+            #endregion
 
             _notificationService.Notify(
                 "The case was assigned",
                 new string[] { @case.TeamLeaderUsername },
                 new string[] { @case.ManagerUsername, @case.TeamAssistantUsername, @case.DirectorUsername });
 
-            return new CaseAssignmentResponse
+            using (var hrDbContext = _hrDbContextFactory.Create())
             {
-                DirectorUsername = @case.DirectorUsername,
-                ManagerUsername = @case.ManagerUsername,
-                TeamLeaderUsername = @case.TeamLeaderUsername,
-                TeamAssistantUsername = @case.TeamAssistantUsername,
-            };
+                List<Employee> employees = hrDbContext.Employees.Where(employee =>
+                        employee.Username == @case.DirectorUsername
+                        || employee.Username == @case.ManagerUsername
+                        || employee.Username == @case.TeamLeaderUsername
+                        || employee.Username == @case.TeamAssistantUsername)
+                    .ToList();
+
+                return new CaseAssignmentResponse
+                {
+                    DirectorUsername = employees.First(employee => employee.Username == @case.DirectorUsername).Name,
+                    ManagerUsername = employees.First(employee => employee.Username == @case.ManagerUsername).Name,
+                    TeamLeaderUsername = employees.First(employee => employee.Username == @case.TeamLeaderUsername).Name,
+                    TeamAssistantUsername = employees.First(employee => employee.Username == @case.TeamAssistantUsername).Name,
+                };
+            }
         }
 
         public List<Case> GetOngoingCases()
@@ -305,6 +343,17 @@ namespace CaseManager.BusinessLogic.Domain.Services
             {
                 return dbContext.Cases.FirstOrDefault(@case => @case.CaseNumber == caseNumber);
             }
+        }
+
+        public Task<Case> GetCase(int caseId)
+        {
+            return Task.Run(() =>
+            {
+                using (var dbContext = _caseManagerDbContextFactory.Create())
+                {
+                    return dbContext.Cases.Find(caseId);
+                }
+            });
         }
     }
 }

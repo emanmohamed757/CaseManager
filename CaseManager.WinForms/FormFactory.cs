@@ -43,12 +43,12 @@ namespace CaseManager.WinForms
             return form;
         }
 
-        public static AssignCaseForm CreateAssignCaseForm(Case @case)
+        public static AssignCaseForm CreateAssignCaseForm(int caseId)
         {
             ILifetimeScope scope = _container.BeginLifetimeScope();
 
             var form = _container.Resolve<AssignCaseForm>(
-                new TypedParameter(typeof(Case), @case));
+                new TypedParameter(typeof(int), caseId));
 
             form.FormClosed += (_, __) => scope.Dispose();
             return form;

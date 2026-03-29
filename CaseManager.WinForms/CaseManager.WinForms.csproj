@@ -123,13 +123,13 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnassignedCasesControl.cs">
+    <Compile Include="UnassignedCasesPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UnassignedCasesControl.Designer.cs">
-      <DependentUpon>UnassignedCasesControl.cs</DependentUpon>
+    <Compile Include="UnassignedCasesPage.Designer.cs">
+      <DependentUpon>UnassignedCasesPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\CaseViewModel.cs" />
+    <Compile Include="ViewModels\UnassignedCaseViewModel.cs" />
     <EmbeddedResource Include="AnotherForm.resx">
       <DependentUpon>AnotherForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -151,8 +151,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="UnassignedCasesControl.resx">
-      <DependentUpon>UnassignedCasesControl.cs</DependentUpon>
+    <EmbeddedResource Include="UnassignedCasesPage.resx">
+      <DependentUpon>UnassignedCasesPage.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace CaseManager.WinForms.ViewModels
 {
-    internal class CaseViewModel
+    internal class UnassignedCaseViewModel
     {
         [Browsable(false)]
         public int Id { get; set; }
